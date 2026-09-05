@@ -13,12 +13,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Reserve a data: 29 de outubro de 2026. Uma noite de sonhos e estrelas nos espera.",
+          "Reserve a data: 12 de dezembro de 2026. Uma noite de sonhos e estrelas nos espera.",
       },
       { property: "og:title", content: "Gabriela — Save the Date | 15 anos" },
       {
         property: "og:description",
-        content: "29 de outubro de 2026 — uma noite de sonhos e estrelas.",
+        content: "12 de dezembro de 2026 — uma noite de sonhos e estrelas.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -81,10 +81,8 @@ function Index() {
     <main className="celestial-stage relative min-h-[100svh] overflow-hidden text-star">
       <CelestialStarfield />
       <audio ref={audioRef} src="/audio/celestial-ambient.mp3" loop preload="auto" />
-      <div className="cosmic-haze pointer-events-none fixed inset-[15%] z-0" aria-hidden />
       <div className="celestial-grain pointer-events-none fixed inset-0 z-10" aria-hidden />
-      <div className="shooting-star pointer-events-none fixed -right-16 top-[16%] z-10" aria-hidden />
-      <div className="shooting-star pointer-events-none fixed -right-20 top-[58%] z-10 [animation-delay:5.7s] [animation-duration:15s]" aria-hidden />
+      <ArcShootingStar />
 
       <div
         className="pointer-events-none fixed right-8 top-12 z-10 hidden h-16 w-16 sm:block"
@@ -164,6 +162,18 @@ function Index() {
         onConfirm={setConfirmedName}
       />
     </main>
+  );
+}
+
+function ArcShootingStar() {
+  return (
+    <div className="arc-comet pointer-events-none fixed left-1/2 top-[7%] z-10 h-32 w-[min(92vw,58rem)] -translate-x-1/2" aria-hidden>
+      <span className="arc-comet-trail arc-comet-trail-primary" />
+      <span className="arc-comet-trail arc-comet-trail-secondary" />
+      <span className="arc-comet-star">
+        <span />
+      </span>
+    </div>
   );
 }
 
@@ -282,38 +292,43 @@ function DateScene() {
         className="comet-trail pointer-events-none absolute left-1/2 top-1/2 -z-10"
         aria-hidden
       />
-      <p className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-silver sm:text-xs">
-        Quando as estrelas se alinharem
-      </p>
-      <h1 id="date-title" className="sr-only">
-        29 de outubro de 2026
-      </h1>
-      <motion.span
-        className="mt-3 font-display text-[9rem] leading-[0.85] text-star sm:text-[12rem]"
-        initial={{ opacity: 0, scale: 0.65, filter: "blur(12px)" }}
-        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-        transition={{ delay: 0.5, duration: 1.1 }}
-        aria-hidden
+      <motion.p
+        className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-silver sm:text-xs"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.15, duration: 1.5 }}
       >
-        29
-      </motion.span>
+        Quando as estrelas se alinharem
+      </motion.p>
+      <h1 id="date-title" className="sr-only">
+        12 de dezembro de 2026
+      </h1>
+      <div className="mt-3 flex flex-col items-center" aria-hidden>
+        <motion.span
+          className="font-display text-[9rem] leading-[0.78] text-star sm:text-[12rem]"
+          initial={{ opacity: 0, scale: 0.65, filter: "blur(12px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          transition={{ delay: 1.35, duration: 1.5 }}
+        >
+          12
+        </motion.span>
+        <motion.span
+          className="mt-3 font-label text-lg tracking-[0.45em] text-star sm:text-xl"
+          initial={{ opacity: 0, letterSpacing: "0.8em" }}
+          animate={{ opacity: 1, letterSpacing: "0.45em" }}
+          transition={{ delay: 1.8, duration: 1.5 }}
+        >
+          2026
+        </motion.span>
+      </div>
       <motion.span
-        className="font-script text-5xl text-silver sm:text-7xl"
+        className="mt-12 font-script text-5xl text-silver sm:mt-16 sm:text-7xl"
         initial={{ opacity: 0, x: -40 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1.3, duration: 0.9 }}
+        transition={{ delay: 2.25, duration: 1.5 }}
         aria-hidden
       >
-        Outubro
-      </motion.span>
-      <motion.span
-        className="mt-5 font-label text-lg tracking-[0.45em] text-star sm:text-xl"
-        initial={{ opacity: 0, letterSpacing: "0.8em" }}
-        animate={{ opacity: 1, letterSpacing: "0.45em" }}
-        transition={{ delay: 2, duration: 1 }}
-        aria-hidden
-      >
-        2026
+        Dezembro
       </motion.span>
     </motion.section>
   );
@@ -328,10 +343,6 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 1.8 }}
     >
-      <div
-        className="galaxy-disc pointer-events-none absolute left-1/2 top-[34%] -z-10 aspect-square w-[min(95vw,44rem)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-80"
-        aria-hidden
-      />
       <motion.h1
         id="gabriela-title"
         className="font-display text-[clamp(3.3rem,12vw,8rem)] leading-none tracking-[0.08em] text-star drop-shadow-[0_0_24px_var(--silver)]"
@@ -349,9 +360,7 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
       >
         <span className="h-px w-10 bg-silver sm:w-24" />
         <span className="font-script text-5xl text-silver sm:text-7xl">15</span>
-        <span className="font-label text-xs uppercase tracking-[0.4em] text-silver sm:text-sm">
-          anos
-        </span>
+        <YearsWord />
         <span className="h-px w-10 bg-silver sm:w-24" />
       </motion.div>
       <motion.p
@@ -377,6 +386,17 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
         </Button>
       </motion.div>
     </motion.section>
+  );
+}
+
+function YearsWord() {
+  return (
+    <span className="years-word font-label text-xs uppercase tracking-[0.4em] text-silver sm:text-sm" aria-label="anos">
+      <span className="years-letter years-letter-a">A<span className="letter-star" aria-hidden /></span>
+      <span>N</span>
+      <span className="years-letter years-letter-o">O<span className="letter-star" aria-hidden /></span>
+      <span>S</span>
+    </span>
   );
 }
 
