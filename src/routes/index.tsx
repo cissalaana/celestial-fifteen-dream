@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronRight, RotateCcw, Sparkles, X } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { Check, ChevronRight, RotateCcw, Sparkles, Volume2, VolumeX, X } from "lucide-react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { CelestialStarfield } from "@/components/celestial-starfield";
@@ -27,12 +27,14 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const sceneDuration = [3800, 5000, 5100];
+const sceneDuration = [5200, 6500, 6500];
 
 function Index() {
   const [scene, setScene] = useState(0);
   const [rsvpOpen, setRsvpOpen] = useState(false);
   const [confirmedName, setConfirmedName] = useState("");
+  const [soundOn, setSoundOn] = useState(true);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     if (scene >= 3) return;
@@ -43,6 +45,33 @@ function Index() {
     return () => window.clearTimeout(timeout);
   }, [scene]);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = 0;
+    audio.play().then(() => {
+      let volume = 0;
+      const fade = window.setInterval(() => {
+        volume = Math.min(0.22, volume + 0.02);
+        audio.volume = volume;
+        if (volume >= 0.22) window.clearInterval(fade);
+      }, 180);
+    }).catch(() => setSoundOn(false));
+  }, []);
+
+  const toggleSound = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (soundOn) {
+      audio.pause();
+      setSoundOn(false);
+      return;
+    }
+    audio.volume = 0.22;
+    void audio.play();
+    setSoundOn(true);
+  };
+
   const replay = () => {
     setRsvpOpen(false);
     setScene(0);
@@ -51,12 +80,11 @@ function Index() {
   return (
     <main className="celestial-stage relative min-h-[100svh] overflow-hidden text-star">
       <CelestialStarfield />
+      <audio ref={audioRef} src="/audio/celestial-ambient.mp3" loop preload="auto" />
       <div className="cosmic-haze pointer-events-none fixed inset-[15%] z-0" aria-hidden />
       <div className="celestial-grain pointer-events-none fixed inset-0 z-10" aria-hidden />
-      <div
-        className="moon-crescent pointer-events-none fixed left-5 top-2 z-10 opacity-75 sm:left-12 sm:top-8"
-        aria-hidden
-      />
+      <div className="shooting-star pointer-events-none fixed -right-16 top-[16%] z-10" aria-hidden />
+      <div className="shooting-star pointer-events-none fixed -right-20 top-[58%] z-10 [animation-delay:5.7s] [animation-duration:15s]" aria-hidden />
 
       <div
         className="pointer-events-none fixed right-8 top-12 z-10 hidden h-16 w-16 sm:block"
@@ -87,7 +115,7 @@ function Index() {
             onClick={() => setScene(step)}
             aria-label={`Ir para cena ${step + 1}`}
             aria-current={scene === step ? "step" : undefined}
-            className={`h-px cursor-pointer transition-all duration-500 ${scene === step ? "w-10 bg-gold-soft" : "w-5 bg-silver/35 hover:bg-silver/70"}`}
+            className={`h-px cursor-pointer transition-all duration-500 ${scene === step ? "w-10 bg-silver" : "w-5 bg-silver/35 hover:bg-silver/70"}`}
           />
         ))}
       </nav>
@@ -97,7 +125,7 @@ function Index() {
           type="button"
           variant="ghost"
           onClick={() => setScene(3)}
-          className="fixed right-4 top-4 z-40 font-label text-[0.6rem] uppercase tracking-[0.18em] text-silver/65 hover:bg-silver/10 hover:text-star sm:right-8 sm:top-7"
+          className="fixed right-16 top-4 z-40 font-label text-[0.6rem] uppercase tracking-[0.18em] text-silver/65 hover:bg-silver/10 hover:text-star sm:right-20 sm:top-7"
         >
           Pular <ChevronRight />
         </Button>
@@ -111,11 +139,23 @@ function Index() {
           onClick={replay}
           aria-label="Rever animação"
           title="Rever animação"
-          className="fixed right-4 top-4 z-40 text-silver/65 hover:bg-silver/10 hover:text-star sm:right-8 sm:top-7"
+          className="fixed right-16 top-4 z-40 text-silver/65 hover:bg-silver/10 hover:text-star sm:right-20 sm:top-7"
         >
           <RotateCcw />
         </Button>
       )}
+
+      <Button
+        type="button"
+        size="icon"
+        variant="ghost"
+        onClick={toggleSound}
+        aria-label={soundOn ? "Desativar música" : "Ativar música"}
+        title={soundOn ? "Desativar música" : "Ativar música"}
+        className="fixed right-4 top-4 z-40 text-silver/70 hover:bg-silver/10 hover:text-star sm:right-8 sm:top-7"
+      >
+        {soundOn ? <Volume2 /> : <VolumeX />}
+      </Button>
 
       <RsvpDialog
         open={rsvpOpen}
@@ -133,27 +173,27 @@ function GateScene() {
       aria-label="Abertura do convite"
       className="absolute inset-0 flex items-center justify-center overflow-hidden"
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.7 } }}
+      exit={{ opacity: 0, transition: { duration: 1.6 } }}
     >
       <motion.div
         className="gate-panel absolute inset-y-0 left-0 w-1/2 origin-left border-r"
         initial={{ x: 0, rotateY: 0 }}
         animate={{ x: "-98%", rotateY: 18 }}
-        transition={{ duration: 3.1, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
+        transition={{ duration: 4.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
       />
       <motion.div
         className="gate-panel absolute inset-y-0 right-0 w-1/2 origin-right border-l"
         initial={{ x: 0, rotateY: 0 }}
         animate={{ x: "98%", rotateY: -18 }}
-        transition={{ duration: 3.1, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
+        transition={{ duration: 4.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
       />
       <motion.div
         className="z-10 text-center"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: [0, 1, 1, 0], scale: [0.9, 1, 1, 1.05] }}
-        transition={{ duration: 3.3, times: [0, 0.25, 0.72, 1] }}
+        transition={{ duration: 4.5, times: [0, 0.25, 0.72, 1] }}
       >
-        <Sparkles className="mx-auto mb-6 size-5 text-gold-soft" strokeWidth={1} />
+        <Sparkles className="mx-auto mb-6 size-5 text-silver" strokeWidth={1} />
         <p className="font-label text-[0.65rem] uppercase tracking-[0.42em] text-silver/85 sm:text-xs">
           Uma noite especial se aproxima
         </p>
@@ -171,7 +211,7 @@ function SaveTheDateScene() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 1.08, filter: "blur(8px)" }}
-      transition={{ duration: 0.9 }}
+      transition={{ duration: 1.7 }}
     >
       <div
         className="absolute left-1/2 top-1/2 size-[min(80vw,32rem)] -translate-x-1/2 -translate-y-1/2"
@@ -192,8 +232,17 @@ function SaveTheDateScene() {
           />
         ))}
       </div>
+      <div className="particle-orbit pointer-events-none absolute left-1/2 top-1/2 size-[min(92vw,38rem)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-silver/15" aria-hidden>
+        {Array.from({ length: 24 }).map((_, index) => (
+          <span
+            key={index}
+            className="absolute left-1/2 top-1/2 size-1 rounded-full bg-silver shadow-celestial"
+            style={{ transform: `rotate(${index * 15}deg) translateX(min(46vw,19rem))` }}
+          />
+        ))}
+      </div>
       <motion.p
-        className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-gold-soft sm:text-xs"
+        className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-silver sm:text-xs"
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
@@ -210,7 +259,7 @@ function SaveTheDateScene() {
         Save The Date
       </motion.h1>
       <motion.div
-        className="mt-9 h-px w-40 bg-gradient-to-r from-transparent via-gold-soft to-transparent sm:w-64"
+        className="mt-9 h-px w-40 bg-gradient-to-r from-transparent via-silver to-transparent sm:w-64"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ delay: 1.4, duration: 1.2 }}
@@ -227,13 +276,13 @@ function DateScene() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, y: -24 }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 1.7 }}
     >
       <div
         className="comet-trail pointer-events-none absolute left-1/2 top-1/2 -z-10"
         aria-hidden
       />
-      <p className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-gold-soft sm:text-xs">
+      <p className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-silver sm:text-xs">
         Quando as estrelas se alinharem
       </p>
       <h1 id="date-title" className="sr-only">
@@ -277,23 +326,15 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
       className="relative flex w-full max-w-4xl flex-col items-center text-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1.2 }}
+      transition={{ duration: 1.8 }}
     >
       <div
         className="galaxy-disc pointer-events-none absolute left-1/2 top-[34%] -z-10 aspect-square w-[min(95vw,44rem)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-80"
         aria-hidden
       />
-      <motion.p
-        className="font-script text-4xl text-gold-soft sm:text-5xl"
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-      >
-        Os meus
-      </motion.p>
       <motion.h1
         id="gabriela-title"
-        className="mt-1 font-display text-[clamp(3.3rem,12vw,8rem)] leading-none tracking-[0.08em] text-star drop-shadow-[0_0_24px_var(--silver)]"
+        className="font-display text-[clamp(3.3rem,12vw,8rem)] leading-none tracking-[0.08em] text-star drop-shadow-[0_0_24px_var(--silver)]"
         initial={{ opacity: 0, scale: 0.86 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.8, duration: 1.25, ease: [0.16, 1, 0.3, 1] }}
@@ -306,12 +347,12 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
       >
-        <span className="h-px w-10 bg-gold sm:w-24" />
+        <span className="h-px w-10 bg-silver sm:w-24" />
         <span className="font-script text-5xl text-silver sm:text-7xl">15</span>
         <span className="font-label text-xs uppercase tracking-[0.4em] text-silver sm:text-sm">
           anos
         </span>
-        <span className="h-px w-10 bg-gold sm:w-24" />
+        <span className="h-px w-10 bg-silver sm:w-24" />
       </motion.div>
       <motion.p
         className="mt-8 max-w-2xl font-label text-[0.7rem] uppercase leading-7 tracking-[0.2em] text-silver sm:text-sm sm:leading-8"
@@ -368,7 +409,7 @@ function RsvpDialog({ open, onClose, confirmedName, onConfirm }: RsvpDialogProps
           aria-labelledby="rsvp-title"
         >
           <motion.div
-            className="relative w-full max-w-md border border-gold/40 bg-night-soft/95 px-7 py-9 text-center shadow-celestial sm:px-10 sm:py-11"
+            className="relative w-full max-w-md border border-silver/40 bg-night-soft/95 px-7 py-9 text-center shadow-celestial sm:px-10 sm:py-11"
             initial={{ opacity: 0, scale: 0.92, y: 18 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
@@ -385,7 +426,7 @@ function RsvpDialog({ open, onClose, confirmedName, onConfirm }: RsvpDialogProps
             </Button>
             {confirmedName ? (
               <div className="flex flex-col items-center">
-                <div className="mb-6 flex size-14 items-center justify-center rounded-full border border-gold/60 bg-gold/10 text-gold-soft">
+                <div className="mb-6 flex size-14 items-center justify-center rounded-full border border-silver/60 bg-silver/10 text-silver">
                   <Check className="size-6" />
                 </div>
                 <h2 id="rsvp-title" className="font-script text-4xl text-star">
@@ -401,7 +442,7 @@ function RsvpDialog({ open, onClose, confirmedName, onConfirm }: RsvpDialogProps
               </div>
             ) : (
               <form onSubmit={submit}>
-                <Sparkles className="mx-auto mb-5 size-5 text-gold-soft" strokeWidth={1} />
+                <Sparkles className="mx-auto mb-5 size-5 text-silver" strokeWidth={1} />
                 <h2 id="rsvp-title" className="font-script text-4xl text-star sm:text-5xl">
                   Você estará lá?
                 </h2>
@@ -418,7 +459,7 @@ function RsvpDialog({ open, onClose, confirmedName, onConfirm }: RsvpDialogProps
                   required
                   autoFocus
                   placeholder="SEU NOME"
-                  className="mt-8 h-12 w-full border-x-0 border-b border-t-0 border-gold/45 bg-transparent px-2 text-center font-label text-xs uppercase tracking-[0.18em] text-star outline-none placeholder:text-silver/35 focus:border-gold-soft"
+                  className="mt-8 h-12 w-full border-x-0 border-b border-t-0 border-silver/45 bg-transparent px-2 text-center font-label text-xs uppercase tracking-[0.18em] text-star outline-none placeholder:text-silver/35 focus:border-star"
                 />
                 <Button className="mt-7 w-full" variant="celestial" size="celestial" type="submit">
                   Confirmar <Check />

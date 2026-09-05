@@ -66,10 +66,9 @@
   --color-night-soft: var(--night-soft);
   --color-cosmic: var(--cosmic);
   --color-cosmic-glow: var(--cosmic-glow);
-  --color-gold: var(--gold);
-  --color-gold-soft: var(--gold-soft);
   --color-star: var(--star);
   --color-silver: var(--silver);
+  --color-button-night: var(--button-night);
   --shadow-celestial: var(--shadow-celestial);
 }
 
@@ -107,15 +106,14 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
-  --night: oklch(0.205 0.035 283.4);
-  --night-soft: oklch(0.232 0.039 283.8);
-  --cosmic: oklch(0.323 0.069 281.8);
-  --cosmic-glow: oklch(0.404 0.075 282.8);
-  --gold: oklch(0.703 0.055 74.5);
-  --gold-soft: oklch(0.787 0.055 74.9);
+  --night: oklch(0.105 0.018 285);
+  --night-soft: oklch(0.185 0.035 280);
+  --cosmic: oklch(0.255 0.06 278);
+  --cosmic-glow: oklch(0.39 0.082 275);
+  --button-night: oklch(0.145 0.035 275);
   --star: oklch(1 0 0);
-  --silver: oklch(0.965 0.006 247.9);
-  --shadow-celestial: 0 0 2rem color-mix(in oklab, var(--gold) 22%, transparent);
+  --silver: oklch(0.929 0.013 255.5);
+  --shadow-celestial: 0 0 2rem color-mix(in oklab, var(--silver) 24%, transparent);
 }
 
 .dark {
@@ -183,8 +181,19 @@
   50% { opacity: 1; transform: scale(1.2); }
 }
 
+@keyframes shooting-star {
+  0%, 16% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-28deg) scaleX(0.15); }
+  19% { opacity: 1; }
+  27% { opacity: 0; transform: translate3d(-52vw, 34vh, 0) rotate(-28deg) scaleX(1); }
+  100% { opacity: 0; transform: translate3d(-52vw, 34vh, 0) rotate(-28deg) scaleX(1); }
+}
+
+@keyframes particle-orbit {
+  to { transform: rotate(360deg); }
+}
+
 @utility celestial-stage {
-  background: radial-gradient(circle at center, var(--cosmic-glow) 0%, var(--cosmic) 45%, var(--night) 100%);
+  background: radial-gradient(circle at center, var(--cosmic-glow) 0%, var(--cosmic) 32%, var(--night-soft) 62%, var(--night) 100%);
   isolation: isolate;
 }
 
@@ -199,15 +208,8 @@
   mix-blend-mode: soft-light;
 }
 
-@utility moon-crescent {
-  width: 5rem;
-  height: 5rem;
-  border-radius: 9999px;
-  box-shadow: -0.65rem 0.3rem 0 0 var(--silver), -0.9rem 0.3rem 2.6rem color-mix(in oklab, var(--silver) 58%, transparent);
-}
-
 @utility galaxy-disc {
-  background: conic-gradient(from 30deg, transparent, color-mix(in oklab, var(--silver) 32%, transparent), transparent 34%, color-mix(in oklab, var(--gold-soft) 22%, transparent), transparent 72%);
+  background: conic-gradient(from 30deg, transparent, color-mix(in oklab, var(--star) 25%, transparent), transparent 34%, color-mix(in oklab, var(--silver) 24%, transparent), transparent 72%);
   filter: blur(0.5rem);
   animation: cosmic-drift 12s linear infinite;
 }
@@ -227,11 +229,24 @@
 
 @utility gate-panel {
   background-color: color-mix(in oklab, var(--night) 92%, transparent);
-  background-image: repeating-linear-gradient(90deg, transparent 0 2.5rem, color-mix(in oklab, var(--gold) 48%, transparent) 2.5rem 2.6rem), repeating-linear-gradient(45deg, transparent 0 3.4rem, color-mix(in oklab, var(--gold) 22%, transparent) 3.4rem 3.48rem), repeating-linear-gradient(-45deg, transparent 0 3.4rem, color-mix(in oklab, var(--gold) 22%, transparent) 3.4rem 3.48rem);
-  border-color: color-mix(in oklab, var(--gold) 58%, transparent);
+  background-image: repeating-linear-gradient(90deg, transparent 0 2.5rem, color-mix(in oklab, var(--silver) 34%, transparent) 2.5rem 2.6rem), repeating-linear-gradient(45deg, transparent 0 3.4rem, color-mix(in oklab, var(--silver) 16%, transparent) 3.4rem 3.48rem), repeating-linear-gradient(-45deg, transparent 0 3.4rem, color-mix(in oklab, var(--silver) 16%, transparent) 3.4rem 3.48rem);
+  border-color: color-mix(in oklab, var(--silver) 48%, transparent);
   box-shadow: inset 0 0 5rem color-mix(in oklab, var(--night) 75%, transparent), 0 0 2rem color-mix(in oklab, var(--night) 80%, transparent);
 }
 
+@utility shooting-star {
+  width: min(34vw, 22rem);
+  height: 1px;
+  transform-origin: right center;
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--silver) 45%, transparent), var(--star));
+  box-shadow: 0 0 0.8rem color-mix(in oklab, var(--silver) 80%, transparent);
+  animation: shooting-star 12s ease-out infinite;
+}
+
+@utility particle-orbit {
+  animation: particle-orbit 18s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .galaxy-disc, .comet-trail, .sparkle { animation: none; }
+  .galaxy-disc, .comet-trail, .sparkle, .shooting-star, .particle-orbit { animation: none; }
 }

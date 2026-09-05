@@ -34,13 +34,13 @@ export function CelestialStarfield() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      const count = Math.min(220, Math.floor((width * height) / 7200));
+      const count = Math.min(360, Math.floor((width * height) / 4300));
       stars = Array.from({ length: count }, (_, index) => ({
         x: (Math.sin(index * 387.13) * 0.5 + 0.5) * width,
         y: (Math.sin(index * 91.77 + 2) * 0.5 + 0.5) * height,
-        radius: 0.35 + ((index * 13) % 17) / 13,
-        alpha: 0.25 + ((index * 19) % 60) / 100,
-        speed: 0.0008 + ((index * 7) % 10) / 8000,
+        radius: 0.35 + ((index * 13) % 19) / 12,
+        alpha: 0.3 + ((index * 19) % 68) / 100,
+        speed: 0.0007 + ((index * 7) % 14) / 7000,
         phase: index * 0.73,
       }));
     };
@@ -49,12 +49,12 @@ export function CelestialStarfield() {
       context.clearRect(0, 0, width, height);
       const style = getComputedStyle(document.documentElement);
       const starColor = style.getPropertyValue("--star").trim() || "white";
-      const goldColor = style.getPropertyValue("--gold").trim() || "white";
+      const silverColor = style.getPropertyValue("--silver").trim() || "white";
 
       stars.forEach((star, index) => {
-        const twinkle = reducedMotion ? 0.8 : 0.55 + Math.sin(time * star.speed + star.phase) * 0.4;
+        const twinkle = reducedMotion ? 0.8 : 0.5 + Math.sin(time * star.speed + star.phase) * 0.5;
         context.globalAlpha = Math.max(0.08, star.alpha * twinkle);
-        context.fillStyle = index % 11 === 0 ? goldColor : starColor;
+        context.fillStyle = index % 9 === 0 ? silverColor : starColor;
         context.beginPath();
         context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
         context.fill();
