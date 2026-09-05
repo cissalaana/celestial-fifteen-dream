@@ -115,7 +115,7 @@ function Index() {
             onClick={() => setScene(step)}
             aria-label={`Ir para cena ${step + 1}`}
             aria-current={scene === step ? "step" : undefined}
-            className={`h-px cursor-pointer transition-all duration-500 ${scene === step ? "w-10 bg-gold-soft" : "w-5 bg-silver/35 hover:bg-silver/70"}`}
+            className={`h-px cursor-pointer transition-all duration-500 ${scene === step ? "w-10 bg-silver" : "w-5 bg-silver/35 hover:bg-silver/70"}`}
           />
         ))}
       </nav>
