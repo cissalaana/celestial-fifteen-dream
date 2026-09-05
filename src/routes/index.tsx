@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronRight, RotateCcw, Sparkles, Volume2, VolumeX, X } from "lucide-react";
+import { Check, ChevronRight, RotateCcw, Volume2, VolumeX, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -87,15 +87,6 @@ function Index() {
       <div className="celestial-grain pointer-events-none fixed inset-0 z-10" aria-hidden />
       <ArcShootingStar />
 
-      <div
-        className="pointer-events-none fixed right-8 top-12 z-10 hidden h-16 w-16 sm:block"
-        aria-hidden
-      >
-        <span className="absolute left-1/2 top-0 h-full w-px bg-silver/50" />
-        <span className="absolute left-0 top-1/2 h-px w-full bg-silver/50" />
-        <span className="sparkle absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-star" />
-      </div>
-
       <div className="relative z-20 flex min-h-[100svh] items-center justify-center px-6 py-12">
         <AnimatePresence mode="wait">
           {scene === 0 && <GateScene key="gate" />}
@@ -170,16 +161,15 @@ function Index() {
 
 function ArcShootingStar() {
   return (
-    <div
-      className="arc-comet pointer-events-none fixed left-1/2 top-[7%] z-30 h-32 w-[min(92vw,58rem)] -translate-x-1/2"
+    <img
+      src="/assets/estrela-cadente.png"
+      alt=""
+      className="shooting-star-asset pointer-events-none fixed left-1/2 top-[5%] z-30 w-[min(88vw,58rem)] -translate-x-1/2 object-contain"
+      onError={(event) => {
+        event.currentTarget.style.visibility = "hidden";
+      }}
       aria-hidden
-    >
-      <span className="arc-comet-trail arc-comet-trail-primary" />
-      <span className="arc-comet-trail arc-comet-trail-secondary" />
-      <span className="arc-comet-star">
-        <span />
-      </span>
-    </div>
+    />
   );
 }
 
@@ -209,7 +199,6 @@ function GateScene() {
         animate={{ opacity: [0, 1, 1, 0], scale: [0.9, 1, 1, 1.05] }}
         transition={{ duration: 4.5, times: [0, 0.25, 0.72, 1] }}
       >
-        <Sparkles className="mx-auto mb-6 size-5 text-silver" strokeWidth={1} />
         <p className="font-label text-[0.65rem] uppercase tracking-[0.42em] text-silver/85 sm:text-xs">
           Uma noite especial se aproxima
         </p>
@@ -229,6 +218,7 @@ function SaveTheDateScene() {
       exit={{ opacity: 0, scale: 1.08, filter: "blur(8px)" }}
       transition={{ duration: 1.7 }}
     >
+      <div className="text-glow-island" aria-hidden />
       <div
         className="absolute left-1/2 top-1/2 size-[min(80vw,32rem)] -translate-x-1/2 -translate-y-1/2"
         aria-hidden
@@ -297,10 +287,7 @@ function DateScene() {
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 1.7 }}
     >
-      <div
-        className="comet-trail pointer-events-none absolute left-1/2 top-1/2 -z-10"
-        aria-hidden
-      />
+      <div className="text-glow-island" aria-hidden />
       <motion.p
         className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-silver sm:text-xs"
         initial={{ opacity: 0, y: 8 }}
@@ -312,7 +299,15 @@ function DateScene() {
       <h1 id="date-title" className="sr-only">
         12 de dezembro de 2026
       </h1>
-      <div className="mt-3 flex flex-col items-center" aria-hidden>
+      <div className="mt-10 flex flex-col items-center sm:mt-12" aria-hidden>
+        <motion.span
+          className="mb-10 font-script text-4xl text-silver sm:mb-12 sm:text-5xl"
+          initial={{ opacity: 0, y: -18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.25, duration: 1.5 }}
+        >
+          Dezembro
+        </motion.span>
         <motion.span
           className="font-display text-[9rem] leading-[0.78] text-star sm:text-[12rem]"
           initial={{ opacity: 0, scale: 0.65, filter: "blur(12px)" }}
@@ -322,23 +317,14 @@ function DateScene() {
           12
         </motion.span>
         <motion.span
-          className="mt-3 font-label text-lg tracking-[0.45em] text-star sm:text-xl"
+          className="mt-2 font-label text-base tracking-[0.42em] text-star sm:text-lg"
           initial={{ opacity: 0, letterSpacing: "0.8em" }}
-          animate={{ opacity: 1, letterSpacing: "0.45em" }}
+          animate={{ opacity: 1, letterSpacing: "0.42em" }}
           transition={{ delay: 1.8, duration: 1.5 }}
         >
           2026
         </motion.span>
       </div>
-      <motion.span
-        className="mt-12 font-script text-5xl text-silver sm:mt-16 sm:text-7xl"
-        initial={{ opacity: 0, x: -40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 2.25, duration: 1.5 }}
-        aria-hidden
-      >
-        Dezembro
-      </motion.span>
     </motion.section>
   );
 }
@@ -352,6 +338,7 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 1.8 }}
     >
+      <div className="text-glow-island" aria-hidden />
       <motion.h1
         id="gabriela-title"
         className="font-display text-[clamp(3.3rem,12vw,8rem)] leading-none tracking-[0.08em] text-star drop-shadow-[0_0_24px_var(--silver)]"
@@ -362,13 +349,13 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
         GABRIELA
       </motion.h1>
       <motion.div
-        className="mt-2 flex items-center gap-4 sm:gap-7"
+        className="mt-5 flex items-baseline justify-center gap-3 sm:gap-5"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
       >
         <span className="h-px w-10 bg-silver sm:w-24" />
-        <span className="font-script text-5xl text-silver sm:text-7xl">15</span>
+        <span className="font-script text-6xl leading-none text-silver sm:text-7xl">15</span>
         <YearsWord />
         <span className="h-px w-10 bg-silver sm:w-24" />
       </motion.div>
@@ -391,7 +378,7 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
           Confirme a sua presença para receber o convite oficial
         </p>
         <Button variant="celestial" size="celestial" onClick={onRsvp}>
-          <Sparkles /> Confirmar presença
+          Confirmar presença
         </Button>
       </motion.div>
     </motion.section>
@@ -401,15 +388,33 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
 function YearsWord() {
   return (
     <span
-      className="years-word font-label text-xs uppercase tracking-[0.4em] text-silver sm:text-sm"
+      className="years-word font-display text-base uppercase tracking-[0.32em] text-silver sm:text-lg"
       aria-label="anos"
     >
       <span className="years-letter years-letter-a">
-        A<span className="letter-star" aria-hidden />
+        A
+        <img
+          src="/assets/brilho-anos-a.png"
+          alt=""
+          className="letter-spark-asset letter-spark-a"
+          onError={(event) => {
+            event.currentTarget.style.visibility = "hidden";
+          }}
+          aria-hidden
+        />
       </span>
       <span>N</span>
       <span className="years-letter years-letter-o">
-        O<span className="letter-star" aria-hidden />
+        O
+        <img
+          src="/assets/brilho-anos-o.png"
+          alt=""
+          className="letter-spark-asset letter-spark-o"
+          onError={(event) => {
+            event.currentTarget.style.visibility = "hidden";
+          }}
+          aria-hidden
+        />
       </span>
       <span>S</span>
     </span>
@@ -478,7 +483,6 @@ function RsvpDialog({ open, onClose, confirmedName, onConfirm }: RsvpDialogProps
               </div>
             ) : (
               <form onSubmit={submit}>
-                <Sparkles className="mx-auto mb-5 size-5 text-silver" strokeWidth={1} />
                 <h2 id="rsvp-title" className="font-script text-4xl text-star sm:text-5xl">
                   Você estará lá?
                 </h2>
