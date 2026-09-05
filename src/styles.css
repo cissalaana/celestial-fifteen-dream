@@ -165,49 +165,121 @@
 }
 
 @keyframes cosmic-drift {
-  0% { transform: rotate(0deg) scale(0.95); }
-  50% { transform: rotate(180deg) scale(1.06); }
-  100% { transform: rotate(360deg) scale(0.95); }
+  0% {
+    transform: rotate(0deg) scale(0.95);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.06);
+  }
+  100% {
+    transform: rotate(360deg) scale(0.95);
+  }
 }
 
 @keyframes comet-orbit {
-  0% { transform: rotate(-30deg) scaleX(0.25); opacity: 0; }
-  30% { opacity: 1; }
-  100% { transform: rotate(315deg) scaleX(1); opacity: 0; }
+  0% {
+    transform: rotate(-30deg) scaleX(0.25);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(315deg) scaleX(1);
+    opacity: 0;
+  }
 }
 
 @keyframes shimmer {
-  0%, 100% { opacity: 0.35; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.2); }
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
 @keyframes shooting-star {
-  0%, 16% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-28deg) scaleX(0.15); }
-  19% { opacity: 1; }
-  27% { opacity: 0; transform: translate3d(-52vw, 34vh, 0) rotate(-28deg) scaleX(1); }
-  100% { opacity: 0; transform: translate3d(-52vw, 34vh, 0) rotate(-28deg) scaleX(1); }
+  0%,
+  16% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(-28deg) scaleX(0.15);
+  }
+  19% {
+    opacity: 1;
+  }
+  27% {
+    opacity: 0;
+    transform: translate3d(-52vw, 34vh, 0) rotate(-28deg) scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-52vw, 34vh, 0) rotate(-28deg) scaleX(1);
+  }
 }
 
 @keyframes arc-comet-reveal {
-  0%, 5% { opacity: 0; clip-path: inset(0 100% 0 0); transform: translate3d(12%, -8%, 0); }
-  22% { opacity: 0.92; }
-  48% { opacity: 1; clip-path: inset(0 0 0 0); transform: translate3d(0, 0, 0); }
-  72%, 100% { opacity: 0; clip-path: inset(0 0 0 0); transform: translate3d(-5%, 4%, 0); }
+  0%,
+  5% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    transform: translate3d(12%, -8%, 0);
+  }
+  22% {
+    opacity: 0.92;
+  }
+  48% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translate3d(0, 0, 0);
+  }
+  72%,
+  100% {
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+    transform: translate3d(-5%, 4%, 0);
+  }
 }
 
 @keyframes arc-star-glide {
-  0%, 5% { opacity: 0; offset-distance: 0%; transform: scale(0.5); }
-  16% { opacity: 1; }
-  48% { opacity: 1; offset-distance: 100%; transform: scale(1); }
-  70%, 100% { opacity: 0; offset-distance: 100%; transform: scale(0.75); }
+  0%,
+  5% {
+    opacity: 0;
+    offset-distance: 0%;
+    transform: scale(0.5);
+  }
+  16% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 1;
+    offset-distance: 100%;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    offset-distance: 100%;
+    transform: scale(0.75);
+  }
 }
 
 @keyframes particle-orbit {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @utility celestial-stage {
-  background: radial-gradient(circle at center, var(--cosmic-glow) 0%, var(--cosmic) 55%, var(--night) 100%);
+  background: radial-gradient(
+    circle at center,
+    var(--cosmic-glow) 0%,
+    var(--cosmic) 55%,
+    var(--night) 100%
+  );
   isolation: isolate;
 }
 
@@ -218,7 +290,14 @@
 }
 
 @utility galaxy-disc {
-  background: conic-gradient(from 30deg, transparent, color-mix(in oklab, var(--star) 25%, transparent), transparent 34%, color-mix(in oklab, var(--silver) 24%, transparent), transparent 72%);
+  background: conic-gradient(
+    from 30deg,
+    transparent,
+    color-mix(in oklab, var(--star) 25%, transparent),
+    transparent 34%,
+    color-mix(in oklab, var(--silver) 24%, transparent),
+    transparent 72%
+  );
   filter: blur(0.5rem);
   animation: cosmic-drift 12s linear infinite;
 }
@@ -227,7 +306,12 @@
   width: min(68vw, 42rem);
   height: 1px;
   transform-origin: left center;
-  background: linear-gradient(90deg, var(--star), color-mix(in oklab, var(--silver) 42%, transparent), transparent);
+  background: linear-gradient(
+    90deg,
+    var(--star),
+    color-mix(in oklab, var(--silver) 42%, transparent),
+    transparent
+  );
   box-shadow: 0 0 1rem var(--silver);
   animation: comet-orbit 2.4s ease-in-out both;
 }
@@ -238,16 +322,38 @@
 
 @utility gate-panel {
   background-color: color-mix(in oklab, var(--night) 92%, transparent);
-  background-image: repeating-linear-gradient(90deg, transparent 0 2.5rem, color-mix(in oklab, var(--silver) 34%, transparent) 2.5rem 2.6rem), repeating-linear-gradient(45deg, transparent 0 3.4rem, color-mix(in oklab, var(--silver) 16%, transparent) 3.4rem 3.48rem), repeating-linear-gradient(-45deg, transparent 0 3.4rem, color-mix(in oklab, var(--silver) 16%, transparent) 3.4rem 3.48rem);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 2.5rem,
+      color-mix(in oklab, var(--silver) 34%, transparent) 2.5rem 2.6rem
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 3.4rem,
+      color-mix(in oklab, var(--silver) 16%, transparent) 3.4rem 3.48rem
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 3.4rem,
+      color-mix(in oklab, var(--silver) 16%, transparent) 3.4rem 3.48rem
+    );
   border-color: color-mix(in oklab, var(--silver) 48%, transparent);
-  box-shadow: inset 0 0 5rem color-mix(in oklab, var(--night) 75%, transparent), 0 0 2rem color-mix(in oklab, var(--night) 80%, transparent);
+  box-shadow:
+    inset 0 0 5rem color-mix(in oklab, var(--night) 75%, transparent),
+    0 0 2rem color-mix(in oklab, var(--night) 80%, transparent);
 }
 
 @utility shooting-star {
   width: min(34vw, 22rem);
   height: 1px;
   transform-origin: right center;
-  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--silver) 45%, transparent), var(--star));
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--silver) 45%, transparent),
+    var(--star)
+  );
   box-shadow: 0 0 0.8rem color-mix(in oklab, var(--silver) 80%, transparent);
   animation: shooting-star 12s ease-out infinite;
 }
@@ -333,10 +439,24 @@
   box-shadow: 0 0 0.65rem var(--silver);
 }
 
-.arc-comet-star::before { width: 100%; height: 1px; }
-.arc-comet-star::after { width: 1px; height: 100%; }
-.arc-comet-star > span::before { width: 72%; height: 1px; transform: translate(-50%, -50%) rotate(45deg); }
-.arc-comet-star > span::after { width: 1px; height: 72%; transform: translate(-50%, -50%) rotate(45deg); }
+.arc-comet-star::before {
+  width: 100%;
+  height: 1px;
+}
+.arc-comet-star::after {
+  width: 1px;
+  height: 100%;
+}
+.arc-comet-star > span::before {
+  width: 72%;
+  height: 1px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.arc-comet-star > span::after {
+  width: 1px;
+  height: 72%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
 
 .letter-star::before,
 .letter-star::after {
@@ -348,11 +468,31 @@
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-.letter-star::before { width: 0.65rem; height: 1px; }
-.letter-star::after { width: 1px; height: 0.65rem; }
+.letter-star::before {
+  width: 0.65rem;
+  height: 1px;
+}
+.letter-star::after {
+  width: 1px;
+  height: 0.65rem;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .comet-trail, .sparkle, .shooting-star, .particle-orbit, .arc-comet, .arc-comet-star, .letter-star { animation: none; }
-  .arc-comet { opacity: 0.72; clip-path: none; }
-  .arc-comet-star { opacity: 1; offset-distance: 100%; }
+  .comet-trail,
+  .sparkle,
+  .shooting-star,
+  .particle-orbit,
+  .arc-comet,
+  .arc-comet-star,
+  .letter-star {
+    animation: none;
+  }
+  .arc-comet {
+    opacity: 0.72;
+    clip-path: none;
+  }
+  .arc-comet-star {
+    opacity: 1;
+    offset-distance: 100%;
+  }
 }

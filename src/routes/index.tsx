@@ -49,14 +49,17 @@ function Index() {
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = 0;
-    audio.play().then(() => {
-      let volume = 0;
-      const fade = window.setInterval(() => {
-        volume = Math.min(0.22, volume + 0.02);
-        audio.volume = volume;
-        if (volume >= 0.22) window.clearInterval(fade);
-      }, 180);
-    }).catch(() => setSoundOn(false));
+    audio
+      .play()
+      .then(() => {
+        let volume = 0;
+        const fade = window.setInterval(() => {
+          volume = Math.min(0.22, volume + 0.02);
+          audio.volume = volume;
+          if (volume >= 0.22) window.clearInterval(fade);
+        }, 180);
+      })
+      .catch(() => setSoundOn(false));
   }, []);
 
   const toggleSound = () => {
@@ -167,7 +170,10 @@ function Index() {
 
 function ArcShootingStar() {
   return (
-    <div className="arc-comet pointer-events-none fixed left-1/2 top-[7%] z-10 h-32 w-[min(92vw,58rem)] -translate-x-1/2" aria-hidden>
+    <div
+      className="arc-comet pointer-events-none fixed left-1/2 top-[7%] z-10 h-32 w-[min(92vw,58rem)] -translate-x-1/2"
+      aria-hidden
+    >
       <span className="arc-comet-trail arc-comet-trail-primary" />
       <span className="arc-comet-trail arc-comet-trail-secondary" />
       <span className="arc-comet-star">
@@ -242,7 +248,10 @@ function SaveTheDateScene() {
           />
         ))}
       </div>
-      <div className="particle-orbit pointer-events-none absolute left-1/2 top-1/2 size-[min(92vw,38rem)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-silver/15" aria-hidden>
+      <div
+        className="particle-orbit pointer-events-none absolute left-1/2 top-1/2 size-[min(92vw,38rem)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-silver/15"
+        aria-hidden
+      >
         {Array.from({ length: 24 }).map((_, index) => (
           <span
             key={index}
@@ -391,10 +400,17 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
 
 function YearsWord() {
   return (
-    <span className="years-word font-label text-xs uppercase tracking-[0.4em] text-silver sm:text-sm" aria-label="anos">
-      <span className="years-letter years-letter-a">A<span className="letter-star" aria-hidden /></span>
+    <span
+      className="years-word font-label text-xs uppercase tracking-[0.4em] text-silver sm:text-sm"
+      aria-label="anos"
+    >
+      <span className="years-letter years-letter-a">
+        A<span className="letter-star" aria-hidden />
+      </span>
       <span>N</span>
-      <span className="years-letter years-letter-o">O<span className="letter-star" aria-hidden /></span>
+      <span className="years-letter years-letter-o">
+        O<span className="letter-star" aria-hidden />
+      </span>
       <span>S</span>
     </span>
   );
