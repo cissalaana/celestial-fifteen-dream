@@ -371,9 +371,9 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border-top: 1px solid color-mix(in oklab, var(--silver) 75%, transparent);
+  border-top: 2px solid color-mix(in oklab, var(--silver) 92%, transparent);
   transform: rotate(-7deg);
-  filter: drop-shadow(0 0 0.5rem color-mix(in oklab, var(--silver) 72%, transparent));
+  filter: drop-shadow(0 0 0.28rem var(--star)) drop-shadow(0 0 0.85rem color-mix(in oklab, var(--silver) 88%, transparent));
 }
 
 @utility arc-comet-trail-primary {
@@ -386,7 +386,7 @@
   top: 28%;
   left: 7%;
   right: 5%;
-  opacity: 0.58;
+  opacity: 0.74;
   transform: rotate(-5deg) scaleY(0.8);
 }
 
@@ -394,12 +394,12 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.65rem;
+  height: 1.65rem;
   offset-path: ellipse(48% 43% at 50% 58%);
   offset-rotate: 0deg;
   color: var(--star);
-  filter: drop-shadow(0 0 0.7rem var(--silver));
+  filter: drop-shadow(0 0 0.4rem var(--star)) drop-shadow(0 0 1rem var(--silver));
   animation: arc-star-glide 4.2s ease-in-out both;
 }
 
