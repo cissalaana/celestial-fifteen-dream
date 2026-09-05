@@ -19,6 +19,9 @@
  */
 
 @theme inline {
+  --font-display: "Poiret One", cursive;
+  --font-script: "Parisienne", cursive;
+  --font-label: "Julius Sans One", sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -59,6 +62,15 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-night: var(--night);
+  --color-night-soft: var(--night-soft);
+  --color-cosmic: var(--cosmic);
+  --color-cosmic-glow: var(--cosmic-glow);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-star: var(--star);
+  --color-silver: var(--silver);
+  --shadow-celestial: var(--shadow-celestial);
 }
 
 :root {
@@ -95,6 +107,15 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  --night: oklch(0.205 0.035 283.4);
+  --night-soft: oklch(0.232 0.039 283.8);
+  --cosmic: oklch(0.323 0.069 281.8);
+  --cosmic-glow: oklch(0.404 0.075 282.8);
+  --gold: oklch(0.703 0.055 74.5);
+  --gold-soft: oklch(0.787 0.055 74.9);
+  --star: oklch(1 0 0);
+  --silver: oklch(0.965 0.006 247.9);
+  --shadow-celestial: 0 0 2rem color-mix(in oklab, var(--gold) 22%, transparent);
 }
 
 .dark {
@@ -140,5 +161,77 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    margin: 0;
+    overflow: hidden;
   }
+}
+
+@keyframes cosmic-drift {
+  0% { transform: rotate(0deg) scale(0.95); }
+  50% { transform: rotate(180deg) scale(1.06); }
+  100% { transform: rotate(360deg) scale(0.95); }
+}
+
+@keyframes comet-orbit {
+  0% { transform: rotate(-30deg) scaleX(0.25); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: rotate(315deg) scaleX(1); opacity: 0; }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@utility celestial-stage {
+  background: radial-gradient(circle at center, var(--cosmic-glow) 0%, var(--cosmic) 45%, var(--night) 100%);
+  isolation: isolate;
+}
+
+@utility cosmic-haze {
+  background: radial-gradient(ellipse at center, color-mix(in oklab, var(--silver) 15%, transparent), transparent 62%);
+  filter: blur(2.5rem);
+}
+
+@utility celestial-grain {
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+@utility moon-crescent {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+  box-shadow: -0.65rem 0.3rem 0 0 var(--silver), -0.9rem 0.3rem 2.6rem color-mix(in oklab, var(--silver) 58%, transparent);
+}
+
+@utility galaxy-disc {
+  background: conic-gradient(from 30deg, transparent, color-mix(in oklab, var(--silver) 32%, transparent), transparent 34%, color-mix(in oklab, var(--gold-soft) 22%, transparent), transparent 72%);
+  filter: blur(0.5rem);
+  animation: cosmic-drift 12s linear infinite;
+}
+
+@utility comet-trail {
+  width: min(68vw, 42rem);
+  height: 1px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--star), color-mix(in oklab, var(--silver) 42%, transparent), transparent);
+  box-shadow: 0 0 1rem var(--silver);
+  animation: comet-orbit 2.4s ease-in-out both;
+}
+
+@utility sparkle {
+  animation: shimmer 2.6s ease-in-out infinite;
+}
+
+@utility gate-panel {
+  background-color: color-mix(in oklab, var(--night) 92%, transparent);
+  background-image: repeating-linear-gradient(90deg, transparent 0 2.5rem, color-mix(in oklab, var(--gold) 48%, transparent) 2.5rem 2.6rem), repeating-linear-gradient(45deg, transparent 0 3.4rem, color-mix(in oklab, var(--gold) 22%, transparent) 3.4rem 3.48rem), repeating-linear-gradient(-45deg, transparent 0 3.4rem, color-mix(in oklab, var(--gold) 22%, transparent) 3.4rem 3.48rem);
+  border-color: color-mix(in oklab, var(--gold) 58%, transparent);
+  box-shadow: inset 0 0 5rem color-mix(in oklab, var(--night) 75%, transparent), 0 0 2rem color-mix(in oklab, var(--night) 80%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .galaxy-disc, .comet-trail, .sparkle { animation: none; }
 }
