@@ -171,7 +171,7 @@ function Index() {
 function ArcShootingStar() {
   return (
     <div
-      className="arc-comet pointer-events-none fixed left-1/2 top-[7%] z-10 h-32 w-[min(92vw,58rem)] -translate-x-1/2"
+      className="arc-comet pointer-events-none fixed left-1/2 top-[7%] z-30 h-32 w-[min(92vw,58rem)] -translate-x-1/2"
       aria-hidden
     >
       <span className="arc-comet-trail arc-comet-trail-primary" />
