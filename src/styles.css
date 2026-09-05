@@ -373,7 +373,8 @@
   border-radius: 50%;
   border-top: 2px solid color-mix(in oklab, var(--silver) 92%, transparent);
   transform: rotate(-7deg);
-  filter: drop-shadow(0 0 0.28rem var(--star)) drop-shadow(0 0 0.85rem color-mix(in oklab, var(--silver) 88%, transparent));
+  filter: drop-shadow(0 0 0.28rem var(--star))
+    drop-shadow(0 0 0.85rem color-mix(in oklab, var(--silver) 88%, transparent));
 }
 
 @utility arc-comet-trail-primary {
