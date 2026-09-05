@@ -12,10 +12,14 @@ export const Route = createFileRoute("/")({
       { title: "Gabriela — Save the Date | 15 anos" },
       {
         name: "description",
-        content: "Reserve a data: 29 de outubro de 2026. Uma noite de sonhos e estrelas nos espera.",
+        content:
+          "Reserve a data: 29 de outubro de 2026. Uma noite de sonhos e estrelas nos espera.",
       },
       { property: "og:title", content: "Gabriela — Save the Date | 15 anos" },
-      { property: "og:description", content: "29 de outubro de 2026 — uma noite de sonhos e estrelas." },
+      {
+        property: "og:description",
+        content: "29 de outubro de 2026 — uma noite de sonhos e estrelas.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -32,7 +36,10 @@ function Index() {
 
   useEffect(() => {
     if (scene >= 3) return;
-    const timeout = window.setTimeout(() => setScene((current) => current + 1), sceneDuration[scene]);
+    const timeout = window.setTimeout(
+      () => setScene((current) => current + 1),
+      sceneDuration[scene],
+    );
     return () => window.clearTimeout(timeout);
   }, [scene]);
 
@@ -46,9 +53,15 @@ function Index() {
       <CelestialStarfield />
       <div className="cosmic-haze pointer-events-none fixed inset-[15%] z-0" aria-hidden />
       <div className="celestial-grain pointer-events-none fixed inset-0 z-10" aria-hidden />
-      <div className="moon-crescent pointer-events-none fixed left-5 top-2 z-10 opacity-75 sm:left-12 sm:top-8" aria-hidden />
+      <div
+        className="moon-crescent pointer-events-none fixed left-5 top-2 z-10 opacity-75 sm:left-12 sm:top-8"
+        aria-hidden
+      />
 
-      <div className="pointer-events-none fixed right-8 top-12 z-10 hidden h-16 w-16 sm:block" aria-hidden>
+      <div
+        className="pointer-events-none fixed right-8 top-12 z-10 hidden h-16 w-16 sm:block"
+        aria-hidden
+      >
         <span className="absolute left-1/2 top-0 h-full w-px bg-silver/50" />
         <span className="absolute left-0 top-1/2 h-px w-full bg-silver/50" />
         <span className="sparkle absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-star" />
@@ -63,7 +76,10 @@ function Index() {
         </AnimatePresence>
       </div>
 
-      <nav aria-label="Progresso do convite" className="fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2">
+      <nav
+        aria-label="Progresso do convite"
+        className="fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2"
+      >
         {[0, 1, 2, 3].map((step) => (
           <button
             key={step}
@@ -157,7 +173,10 @@ function SaveTheDateScene() {
       exit={{ opacity: 0, scale: 1.08, filter: "blur(8px)" }}
       transition={{ duration: 0.9 }}
     >
-      <div className="absolute left-1/2 top-1/2 size-[min(80vw,32rem)] -translate-x-1/2 -translate-y-1/2" aria-hidden>
+      <div
+        className="absolute left-1/2 top-1/2 size-[min(80vw,32rem)] -translate-x-1/2 -translate-y-1/2"
+        aria-hidden
+      >
         {particles.map((_, index) => (
           <motion.span
             key={index}
@@ -210,9 +229,16 @@ function DateScene() {
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="comet-trail pointer-events-none absolute left-1/2 top-1/2 -z-10" aria-hidden />
-      <p className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-gold-soft sm:text-xs">Quando as estrelas se alinharem</p>
-      <h1 id="date-title" className="sr-only">29 de outubro de 2026</h1>
+      <div
+        className="comet-trail pointer-events-none absolute left-1/2 top-1/2 -z-10"
+        aria-hidden
+      />
+      <p className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-gold-soft sm:text-xs">
+        Quando as estrelas se alinharem
+      </p>
+      <h1 id="date-title" className="sr-only">
+        29 de outubro de 2026
+      </h1>
       <motion.span
         className="mt-3 font-display text-[9rem] leading-[0.85] text-star sm:text-[12rem]"
         initial={{ opacity: 0, scale: 0.65, filter: "blur(12px)" }}
@@ -253,7 +279,10 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 1.2 }}
     >
-      <div className="galaxy-disc pointer-events-none absolute left-1/2 top-[34%] -z-10 aspect-square w-[min(95vw,44rem)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-80" aria-hidden />
+      <div
+        className="galaxy-disc pointer-events-none absolute left-1/2 top-[34%] -z-10 aspect-square w-[min(95vw,44rem)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-80"
+        aria-hidden
+      />
       <motion.p
         className="font-script text-4xl text-gold-soft sm:text-5xl"
         initial={{ opacity: 0, y: 18 }}
@@ -279,7 +308,9 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
       >
         <span className="h-px w-10 bg-gold sm:w-24" />
         <span className="font-script text-5xl text-silver sm:text-7xl">15</span>
-        <span className="font-label text-xs uppercase tracking-[0.4em] text-silver sm:text-sm">anos</span>
+        <span className="font-label text-xs uppercase tracking-[0.4em] text-silver sm:text-sm">
+          anos
+        </span>
         <span className="h-px w-10 bg-gold sm:w-24" />
       </motion.div>
       <motion.p
@@ -288,7 +319,8 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2 }}
       >
-        Sob um céu de sonhos e estrelas,<br className="hidden sm:block" /> uma noite estrelada nos espera!
+        Sob um céu de sonhos e estrelas,
+        <br className="hidden sm:block" /> uma noite estrelada nos espera!
       </motion.p>
       <motion.div
         className="mt-8 flex flex-col items-center gap-4"
@@ -356,20 +388,29 @@ function RsvpDialog({ open, onClose, confirmedName, onConfirm }: RsvpDialogProps
                 <div className="mb-6 flex size-14 items-center justify-center rounded-full border border-gold/60 bg-gold/10 text-gold-soft">
                   <Check className="size-6" />
                 </div>
-                <h2 id="rsvp-title" className="font-script text-4xl text-star">Presença confirmada</h2>
+                <h2 id="rsvp-title" className="font-script text-4xl text-star">
+                  Presença confirmada
+                </h2>
                 <p className="mt-4 font-label text-[0.68rem] uppercase leading-6 tracking-[0.16em] text-silver/75">
-                  Obrigada, {confirmedName}.<br />Em breve você receberá o convite oficial.
+                  Obrigada, {confirmedName}.<br />
+                  Em breve você receberá o convite oficial.
                 </p>
-                <Button className="mt-8" variant="celestial" size="celestial" onClick={onClose}>Voltar ao céu</Button>
+                <Button className="mt-8" variant="celestial" size="celestial" onClick={onClose}>
+                  Voltar ao céu
+                </Button>
               </div>
             ) : (
               <form onSubmit={submit}>
                 <Sparkles className="mx-auto mb-5 size-5 text-gold-soft" strokeWidth={1} />
-                <h2 id="rsvp-title" className="font-script text-4xl text-star sm:text-5xl">Você estará lá?</h2>
+                <h2 id="rsvp-title" className="font-script text-4xl text-star sm:text-5xl">
+                  Você estará lá?
+                </h2>
                 <p className="mt-3 font-label text-[0.62rem] uppercase leading-5 tracking-[0.18em] text-silver/65">
                   Deixe seu nome para confirmar presença
                 </p>
-                <label htmlFor="guest-name" className="sr-only">Seu nome</label>
+                <label htmlFor="guest-name" className="sr-only">
+                  Seu nome
+                </label>
                 <input
                   id="guest-name"
                   value={name}
