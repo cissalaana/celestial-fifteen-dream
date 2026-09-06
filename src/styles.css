@@ -64,6 +64,8 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-night: var(--night);
   --color-night-soft: var(--night-soft);
+  --color-night-deep: var(--night-deep);
+
   --color-cosmic: var(--cosmic);
   --color-cosmic-glow: var(--cosmic-glow);
   --color-star: var(--star);
