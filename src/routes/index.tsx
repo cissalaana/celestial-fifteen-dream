@@ -321,7 +321,7 @@ function DateScene() {
   );
 }
 
-function FinalScene({ onRsvp }: { onRsvp: () => void }) {
+function FinalScene() {
   return (
     <motion.section
       aria-labelledby="gabriela-title"
@@ -369,8 +369,10 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
         <p className="max-w-lg font-label text-[0.55rem] uppercase leading-5 tracking-[0.18em] text-silver/70 sm:text-[0.65rem]">
           Confirme a sua presença para receber o convite oficial
         </p>
-        <Button variant="celestial" size="celestial" onClick={onRsvp}>
-          Confirmar presença
+        <Button asChild variant="celestial" size="celestial">
+          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
+            Confirmar presença
+          </a>
         </Button>
       </motion.div>
     </motion.section>
