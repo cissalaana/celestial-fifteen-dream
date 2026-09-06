@@ -193,7 +193,25 @@
 }
 
 @utility celestial-stage {
-  background: var(--night);
+  background-color: var(--night);
+  background-image:
+    radial-gradient(
+      ellipse 70% 55% at 50% 42%,
+      color-mix(in oklab, var(--cosmic-glow) 62%, transparent) 0%,
+      color-mix(in oklab, var(--night-soft) 55%, transparent) 45%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 60% 45% at 18% 22%,
+      color-mix(in oklab, var(--cosmic) 55%, transparent) 0%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 55% 45% at 84% 76%,
+      color-mix(in oklab, var(--night-deep) 82%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(circle at 50% 50%, transparent 30%, var(--night) 92%);
   isolation: isolate;
 }
 
@@ -202,19 +220,26 @@
   left: 50%;
   top: 50%;
   z-index: -1;
-  width: min(72vw, 32rem);
-  height: min(48vh, 22rem);
+  width: min(86vw, 40rem);
+  height: min(52vh, 26rem);
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    color-mix(in oklab, var(--cosmic-glow) 72%, transparent) 0%,
-    color-mix(in oklab, var(--cosmic) 40%, transparent) 38%,
-    transparent 74%
+    color-mix(in oklab, var(--cosmic-glow) 55%, transparent) 0%,
+    color-mix(in oklab, var(--night-soft) 42%, transparent) 45%,
+    transparent 78%
   );
-  filter: blur(3rem);
-  opacity: 0.8;
+  filter: blur(4rem);
+  opacity: 0.85;
 }
+
+@utility date-month-overlay {
+  position: relative;
+  z-index: 1;
+  margin-top: -0.32em;
+}
+
 
 @utility celestial-grain {
   opacity: 0.07;
