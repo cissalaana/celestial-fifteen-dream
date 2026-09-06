@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronRight, RotateCcw, Volume2, VolumeX, X } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { ChevronRight, RotateCcw, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { CelestialStarfield } from "@/components/celestial-starfield";
@@ -28,11 +28,11 @@ export const Route = createFileRoute("/")({
 });
 
 const sceneDuration = [5200, 6500, 6500];
+const WHATSAPP_LINK =
+  "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 function Index() {
   const [scene, setScene] = useState(0);
-  const [rsvpOpen, setRsvpOpen] = useState(false);
-  const [confirmedName, setConfirmedName] = useState("");
   const [soundOn, setSoundOn] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -76,7 +76,6 @@ function Index() {
   };
 
   const replay = () => {
-    setRsvpOpen(false);
     setScene(0);
   };
 
@@ -92,7 +91,7 @@ function Index() {
           {scene === 0 && <GateScene key="gate" />}
           {scene === 1 && <SaveTheDateScene key="save" />}
           {scene === 2 && <DateScene key="date" />}
-          {scene === 3 && <FinalScene key="final" onRsvp={() => setRsvpOpen(true)} />}
+          {scene === 3 && <FinalScene key="final" />}
         </AnimatePresence>
       </div>
 
@@ -148,13 +147,6 @@ function Index() {
       >
         {soundOn ? <Volume2 /> : <VolumeX />}
       </Button>
-
-      <RsvpDialog
-        open={rsvpOpen}
-        onClose={() => setRsvpOpen(false)}
-        confirmedName={confirmedName}
-        onConfirm={setConfirmedName}
-      />
     </main>
   );
 }
@@ -329,7 +321,7 @@ function DateScene() {
   );
 }
 
-function FinalScene({ onRsvp }: { onRsvp: () => void }) {
+function FinalScene() {
   return (
     <motion.section
       aria-labelledby="gabriela-title"
@@ -377,8 +369,10 @@ function FinalScene({ onRsvp }: { onRsvp: () => void }) {
         <p className="max-w-lg font-label text-[0.55rem] uppercase leading-5 tracking-[0.18em] text-silver/70 sm:text-[0.65rem]">
           Confirme a sua presença para receber o convite oficial
         </p>
-        <Button variant="celestial" size="celestial" onClick={onRsvp}>
-          Confirmar presença
+        <Button asChild variant="celestial" size="celestial">
+          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
+            Confirmar presença
+          </a>
         </Button>
       </motion.div>
     </motion.section>
@@ -418,97 +412,5 @@ function YearsWord() {
       </span>
       <span>S</span>
     </span>
-  );
-}
-
-type RsvpDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  confirmedName: string;
-  onConfirm: (name: string) => void;
-};
-
-function RsvpDialog({ open, onClose, confirmedName, onConfirm }: RsvpDialogProps) {
-  const [name, setName] = useState("");
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const cleanName = name.trim();
-    if (cleanName) onConfirm(cleanName);
-  };
-
-  return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-night/80 px-5 backdrop-blur-md"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="rsvp-title"
-        >
-          <motion.div
-            className="relative w-full max-w-md border border-silver/40 bg-night-soft/95 px-7 py-9 text-center shadow-celestial sm:px-10 sm:py-11"
-            initial={{ opacity: 0, scale: 0.92, y: 18 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-          >
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              aria-label="Fechar"
-              className="absolute right-2 top-2 text-silver/65 hover:bg-silver/10 hover:text-star"
-            >
-              <X />
-            </Button>
-            {confirmedName ? (
-              <div className="flex flex-col items-center">
-                <div className="mb-6 flex size-14 items-center justify-center rounded-full border border-silver/60 bg-silver/10 text-silver">
-                  <Check className="size-6" />
-                </div>
-                <h2 id="rsvp-title" className="font-script text-4xl text-star">
-                  Presença confirmada
-                </h2>
-                <p className="mt-4 font-label text-[0.68rem] uppercase leading-6 tracking-[0.16em] text-silver/75">
-                  Obrigada, {confirmedName}.<br />
-                  Em breve você receberá o convite oficial.
-                </p>
-                <Button className="mt-8" variant="celestial" size="celestial" onClick={onClose}>
-                  Voltar ao céu
-                </Button>
-              </div>
-            ) : (
-              <form onSubmit={submit}>
-                <h2 id="rsvp-title" className="font-script text-4xl text-star sm:text-5xl">
-                  Você estará lá?
-                </h2>
-                <p className="mt-3 font-label text-[0.62rem] uppercase leading-5 tracking-[0.18em] text-silver/65">
-                  Deixe seu nome para confirmar presença
-                </p>
-                <label htmlFor="guest-name" className="sr-only">
-                  Seu nome
-                </label>
-                <input
-                  id="guest-name"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  required
-                  autoFocus
-                  placeholder="SEU NOME"
-                  className="mt-8 h-12 w-full border-x-0 border-b border-t-0 border-silver/45 bg-transparent px-2 text-center font-label text-xs uppercase tracking-[0.18em] text-star outline-none placeholder:text-silver/35 focus:border-star"
-                />
-                <Button className="mt-7 w-full" variant="celestial" size="celestial" type="submit">
-                  Confirmar <Check />
-                </Button>
-              </form>
-            )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
   );
 }
