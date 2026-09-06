@@ -325,7 +325,6 @@ function DateScene() {
           2026
         </motion.span>
       </div>
-
     </motion.section>
   );
 }
