@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronRight, RotateCcw, Volume2, VolumeX, X } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { ChevronRight, RotateCcw, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { CelestialStarfield } from "@/components/celestial-starfield";
