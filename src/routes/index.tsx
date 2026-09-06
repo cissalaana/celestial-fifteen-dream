@@ -299,15 +299,7 @@ function DateScene() {
       <h1 id="date-title" className="sr-only">
         12 de dezembro de 2026
       </h1>
-      <div className="mt-10 flex flex-col items-center sm:mt-12" aria-hidden>
-        <motion.span
-          className="mb-10 font-script text-4xl text-silver sm:mb-12 sm:text-5xl"
-          initial={{ opacity: 0, y: -18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.25, duration: 1.5 }}
-        >
-          Dezembro
-        </motion.span>
+      <div className="mt-8 flex flex-col items-center sm:mt-10" aria-hidden>
         <motion.span
           className="font-display text-[9rem] leading-[0.78] text-star sm:text-[12rem]"
           initial={{ opacity: 0, scale: 0.65, filter: "blur(12px)" }}
@@ -317,14 +309,23 @@ function DateScene() {
           12
         </motion.span>
         <motion.span
-          className="mt-2 font-label text-base tracking-[0.42em] text-star sm:text-lg"
-          initial={{ opacity: 0, letterSpacing: "0.8em" }}
-          animate={{ opacity: 1, letterSpacing: "0.42em" }}
-          transition={{ delay: 1.8, duration: 1.5 }}
+          className="date-month-overlay font-script text-5xl text-silver drop-shadow-[0_0_18px_var(--silver)] sm:text-6xl"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.75, duration: 1.5 }}
+        >
+          dezembro
+        </motion.span>
+        <motion.span
+          className="mt-6 font-display text-2xl tracking-[0.5em] text-star sm:mt-7 sm:text-3xl"
+          initial={{ opacity: 0, letterSpacing: "0.9em" }}
+          animate={{ opacity: 1, letterSpacing: "0.5em" }}
+          transition={{ delay: 2.1, duration: 1.5 }}
         >
           2026
         </motion.span>
       </div>
+
     </motion.section>
   );
 }
