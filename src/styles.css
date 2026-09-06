@@ -64,6 +64,8 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-night: var(--night);
   --color-night-soft: var(--night-soft);
+  --color-night-deep: var(--night-deep);
+
   --color-cosmic: var(--cosmic);
   --color-cosmic-glow: var(--cosmic-glow);
   --color-star: var(--star);
@@ -106,11 +108,13 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
-  --night: oklch(0.12801 0.02599 276.78);
-  --night-soft: oklch(0.33723 0.09671 276.07);
-  --cosmic: oklch(0.33723 0.09671 276.07);
-  --cosmic-glow: oklch(0.41511 0.12281 275.66);
+  --night: oklch(0.14 0.045 272);
+  --night-deep: oklch(0.20768 0.0948 270.77);
+  --night-soft: oklch(0.27909 0.07314 275.26);
+  --cosmic: oklch(0.38823 0.06936 279.45);
+  --cosmic-glow: oklch(0.42171 0.18792 274.11);
   --button-night: oklch(0.145 0.035 275);
+
   --star: oklch(1 0 0);
   --silver: oklch(0.929 0.013 255.5);
   --shadow-celestial: 0 0 2rem color-mix(in oklab, var(--silver) 24%, transparent);
@@ -191,7 +195,25 @@
 }
 
 @utility celestial-stage {
-  background: var(--night);
+  background-color: var(--night);
+  background-image:
+    radial-gradient(
+      ellipse 70% 55% at 50% 42%,
+      color-mix(in oklab, var(--cosmic-glow) 62%, transparent) 0%,
+      color-mix(in oklab, var(--night-soft) 55%, transparent) 45%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 60% 45% at 18% 22%,
+      color-mix(in oklab, var(--cosmic) 55%, transparent) 0%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 55% 45% at 84% 76%,
+      color-mix(in oklab, var(--night-deep) 82%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(circle at 50% 50%, transparent 30%, var(--night) 92%);
   isolation: isolate;
 }
 
@@ -200,18 +222,24 @@
   left: 50%;
   top: 50%;
   z-index: -1;
-  width: min(72vw, 32rem);
-  height: min(48vh, 22rem);
+  width: min(86vw, 40rem);
+  height: min(52vh, 26rem);
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    color-mix(in oklab, var(--cosmic-glow) 72%, transparent) 0%,
-    color-mix(in oklab, var(--cosmic) 40%, transparent) 38%,
-    transparent 74%
+    color-mix(in oklab, var(--cosmic-glow) 55%, transparent) 0%,
+    color-mix(in oklab, var(--night-soft) 42%, transparent) 45%,
+    transparent 78%
   );
-  filter: blur(3rem);
-  opacity: 0.8;
+  filter: blur(4rem);
+  opacity: 0.85;
+}
+
+@utility date-month-overlay {
+  position: relative;
+  z-index: 1;
+  margin-top: -0.32em;
 }
 
 @utility celestial-grain {
