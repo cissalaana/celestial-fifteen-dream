@@ -106,11 +106,13 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
-  --night: oklch(0.12801 0.02599 276.78);
-  --night-soft: oklch(0.33723 0.09671 276.07);
-  --cosmic: oklch(0.33723 0.09671 276.07);
-  --cosmic-glow: oklch(0.41511 0.12281 275.66);
+  --night: oklch(0.14 0.045 272);
+  --night-deep: oklch(0.20768 0.0948 270.77);
+  --night-soft: oklch(0.27909 0.07314 275.26);
+  --cosmic: oklch(0.38823 0.06936 279.45);
+  --cosmic-glow: oklch(0.42171 0.18792 274.11);
   --button-night: oklch(0.145 0.035 275);
+
   --star: oklch(1 0 0);
   --silver: oklch(0.929 0.013 255.5);
   --shadow-celestial: 0 0 2rem color-mix(in oklab, var(--silver) 24%, transparent);
