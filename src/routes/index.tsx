@@ -28,11 +28,11 @@ export const Route = createFileRoute("/")({
 });
 
 const sceneDuration = [5200, 6500, 6500];
+const WHATSAPP_LINK =
+  "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 function Index() {
   const [scene, setScene] = useState(0);
-  const [rsvpOpen, setRsvpOpen] = useState(false);
-  const [confirmedName, setConfirmedName] = useState("");
   const [soundOn, setSoundOn] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -76,7 +76,6 @@ function Index() {
   };
 
   const replay = () => {
-    setRsvpOpen(false);
     setScene(0);
   };
 
@@ -92,7 +91,7 @@ function Index() {
           {scene === 0 && <GateScene key="gate" />}
           {scene === 1 && <SaveTheDateScene key="save" />}
           {scene === 2 && <DateScene key="date" />}
-          {scene === 3 && <FinalScene key="final" onRsvp={() => setRsvpOpen(true)} />}
+          {scene === 3 && <FinalScene key="final" />}
         </AnimatePresence>
       </div>
 
@@ -148,13 +147,6 @@ function Index() {
       >
         {soundOn ? <Volume2 /> : <VolumeX />}
       </Button>
-
-      <RsvpDialog
-        open={rsvpOpen}
-        onClose={() => setRsvpOpen(false)}
-        confirmedName={confirmedName}
-        onConfirm={setConfirmedName}
-      />
     </main>
   );
 }
