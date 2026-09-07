@@ -29,11 +29,7 @@ export const Route = createFileRoute("/")({
 
 const sceneDuration = [5200, 6500, 6500];
 const WHATSAPP_LINK =
-  "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1"; // mantido para referência
-
-const handleClick = () => {
-  window.open(WHATSAPP_LINK, "_blank", "noopener,noreferrer");
-};
+  "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 function Index() {
   const [scene, setScene] = useState(0);
@@ -95,7 +91,7 @@ function Index() {
           {scene === 0 && <GateScene key="gate" />}
           {scene === 1 && <SaveTheDateScene key="save" />}
           {scene === 2 && <DateScene key="date" />}
-          {scene === 3 && <FinalScene key="final" onConfirm={handleClick} />}
+          {scene === 3 && <FinalScene key="final" />}
         </AnimatePresence>
       </div>
 
@@ -325,7 +321,7 @@ function DateScene() {
   );
 }
 
-function FinalScene({ onConfirm }: { onConfirm: () => void }) {
+function FinalScene() {
   return (
     <motion.section
       aria-labelledby="gabriela-title"
@@ -373,8 +369,14 @@ function FinalScene({ onConfirm }: { onConfirm: () => void }) {
         <p className="max-w-lg font-label text-[0.55rem] uppercase leading-5 tracking-[0.18em] text-silver/70 sm:text-[0.65rem]">
           Confirme a sua presença para receber o convite oficial
         </p>
-        <Button variant="celestial" size="celestial" onClick={onConfirm}>
-          Confirmar presença
+        <Button asChild variant="celestial" size="celestial">
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Confirmar presença
+          </a>
         </Button>
       </motion.div>
     </motion.section>
