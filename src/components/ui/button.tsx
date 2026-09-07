@@ -17,7 +17,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         celestial:
-          "border border-silver/20 bg-star/5 font-label uppercase text-silver shadow-celestial backdrop-blur-[10px] hover:border-silver/40 hover:bg-star/10 hover:text-star",
+          "border border-star/25 bg-night-deep/60 font-label uppercase text-silver shadow-celestial backdrop-blur-[12px] hover:border-star/45 hover:bg-night-deep/75 hover:text-star",
       },
       size: {
         default: "h-9 px-4 py-2",

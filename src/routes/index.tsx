@@ -390,10 +390,12 @@ function YearsWord() {
     >
       <span className="years-letter years-letter-a">
         A
-        <img
-          src="/assets/brilho-anos-a.png"
+        <motion.img
+          src="/assets/brilho-anos-a.svg"
           alt=""
           className="letter-spark-asset letter-spark-a"
+          animate={{ opacity: [0.55, 1, 0.55], scale: [0.9, 1.1, 0.9] }}
+          transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
           onError={(event) => {
             event.currentTarget.style.visibility = "hidden";
           }}
@@ -403,10 +405,12 @@ function YearsWord() {
       <span>N</span>
       <span className="years-letter years-letter-o">
         O
-        <img
-          src="/assets/brilho-anos-o.png"
+        <motion.img
+          src="/assets/brilho-anos-o.svg"
           alt=""
           className="letter-spark-asset letter-spark-o"
+          animate={{ opacity: [0.55, 1, 0.55], scale: [0.9, 1.1, 0.9] }}
+          transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
           onError={(event) => {
             event.currentTarget.style.visibility = "hidden";
           }}
