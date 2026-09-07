@@ -95,7 +95,7 @@ function Index() {
           {scene === 0 && <GateScene key="gate" />}
           {scene === 1 && <SaveTheDateScene key="save" />}
           {scene === 2 && <DateScene key="date" />}
-          {scene === 3 && <FinalScene key="final" />}
+          {scene === 3 && <FinalScene key="final" onConfirm={handleClick} />}
         </AnimatePresence>
       </div>
 
