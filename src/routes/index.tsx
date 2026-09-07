@@ -153,10 +153,13 @@ function Index() {
 
 function ArcShootingStar() {
   return (
-    <img
-      src="/assets/estrela-cadente.png"
+    <motion.img
+      src="/assets/estrela-cadente.svg"
       alt=""
-      className="shooting-star-asset pointer-events-none fixed left-1/2 top-[5%] z-30 w-[min(88vw,58rem)] -translate-x-1/2 object-contain"
+      className="pointer-events-none fixed left-1/2 top-[5%] z-30 w-[min(88vw,58rem)] object-contain drop-shadow-[0_0_1.2rem_var(--silver)]"
+      initial={{ opacity: 0, x: "-62%", y: -18 }}
+      animate={{ opacity: [0, 1, 1, 0], x: ["-62%", "-50%", "-44%"], y: [-18, 0, 10] }}
+      transition={{ duration: 5.5, ease: "easeInOut", repeat: Infinity, repeatDelay: 3.5 }}
       onError={(event) => {
         event.currentTarget.style.visibility = "hidden";
       }}
@@ -293,26 +296,26 @@ function DateScene() {
       </h1>
       <div className="mt-8 flex flex-col items-center sm:mt-10" aria-hidden>
         <motion.span
-          className="font-display text-[9rem] leading-[0.78] text-star sm:text-[12rem]"
+          className="font-script text-4xl text-silver drop-shadow-[0_0_18px_var(--silver)] sm:text-5xl"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.35, duration: 1.6 }}
+        >
+          Dezembro
+        </motion.span>
+        <motion.span
+          className="mt-14 font-display text-[9rem] leading-[0.78] text-star sm:mt-20 sm:text-[12rem]"
           initial={{ opacity: 0, scale: 0.65, filter: "blur(12px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          transition={{ delay: 1.35, duration: 1.5 }}
+          transition={{ delay: 1.8, duration: 1.7 }}
         >
           12
         </motion.span>
         <motion.span
-          className="date-month-overlay font-script text-5xl text-silver drop-shadow-[0_0_18px_var(--silver)] sm:text-6xl"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.75, duration: 1.5 }}
-        >
-          dezembro
-        </motion.span>
-        <motion.span
-          className="mt-6 font-display text-2xl tracking-[0.5em] text-star sm:mt-7 sm:text-3xl"
+          className="mt-1 font-label text-2xl tracking-[0.42em] text-star sm:text-3xl"
           initial={{ opacity: 0, letterSpacing: "0.9em" }}
-          animate={{ opacity: 1, letterSpacing: "0.5em" }}
-          transition={{ delay: 2.1, duration: 1.5 }}
+          animate={{ opacity: 1, letterSpacing: "0.42em" }}
+          transition={{ delay: 2.25, duration: 1.6 }}
         >
           2026
         </motion.span>
@@ -387,10 +390,12 @@ function YearsWord() {
     >
       <span className="years-letter years-letter-a">
         A
-        <img
-          src="/assets/brilho-anos-a.png"
+        <motion.img
+          src="/assets/brilho-anos-a.svg"
           alt=""
           className="letter-spark-asset letter-spark-a"
+          animate={{ opacity: [0.55, 1, 0.55], scale: [0.9, 1.1, 0.9] }}
+          transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
           onError={(event) => {
             event.currentTarget.style.visibility = "hidden";
           }}
@@ -400,10 +405,12 @@ function YearsWord() {
       <span>N</span>
       <span className="years-letter years-letter-o">
         O
-        <img
-          src="/assets/brilho-anos-o.png"
+        <motion.img
+          src="/assets/brilho-anos-o.svg"
           alt=""
           className="letter-spark-asset letter-spark-o"
+          animate={{ opacity: [0.55, 1, 0.55], scale: [0.9, 1.1, 0.9] }}
+          transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
           onError={(event) => {
             event.currentTarget.style.visibility = "hidden";
           }}
