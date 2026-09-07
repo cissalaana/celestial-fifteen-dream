@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
 
 const sceneDuration = [5200, 6500, 6500];
 const WHATSAPP_LINK =
-  "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
+  "https://web.whatsapp.com/send?phone=5581992895842&text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 function Index() {
   const [scene, setScene] = useState(0);
