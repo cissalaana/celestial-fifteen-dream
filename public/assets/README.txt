@@ -1,7 +1,7 @@
-Substitua os arquivos SVG abaixo pelos seus, mantendo exatamente estes nomes:
+Substitua os arquivos abaixo pelos seus PNGs transparentes, mantendo exatamente estes nomes:
 
-- estrela-cadente.svg
-- brilho-anos-a.svg
-- brilho-anos-o.svg
+- estrela-cadente.png
+- brilho-anos-a.png
+- brilho-anos-o.png
 
-Os arquivos atuais são espaços reservados transparentes. Imagens ausentes ficam ocultas automaticamente.
+As imagens ausentes ficam ocultas automaticamente até que os arquivos sejam adicionados.
