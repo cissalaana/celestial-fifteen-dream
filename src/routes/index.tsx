@@ -325,7 +325,7 @@ function DateScene() {
   );
 }
 
-function FinalScene() {
+function FinalScene({ onConfirm }: { onConfirm: () => void }) {
   return (
     <motion.section
       aria-labelledby="gabriela-title"
@@ -373,10 +373,8 @@ function FinalScene() {
         <p className="max-w-lg font-label text-[0.55rem] uppercase leading-5 tracking-[0.18em] text-silver/70 sm:text-[0.65rem]">
           Confirme a sua presença para receber o convite oficial
         </p>
-        <Button asChild variant="celestial" size="celestial">
-          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
-            Confirmar presença
-          </a>
+        <Button variant="celestial" size="celestial" onClick={onConfirm}>
+          Confirmar presença
         </Button>
       </motion.div>
     </motion.section>
