@@ -6,6 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CelestialStarfield } from "@/components/celestial-starfield";
 import { SparkleCluster, FourPointSparkle } from "@/components/celestial-sparkle";
 import { Button } from "@/components/ui/button";
+import characterAsset from "@/assets/personagem-a-noite-de-uma-estrela.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,7 +31,10 @@ export const Route = createFileRoute("/")({
 
 const sceneDuration = [5200, 6500, 6800];
 const WHATSAPP_LINK =
-  "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
+  "https://web.whatsapp.com/send?phone=5581992895842&text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
+
+// Suporte flexível a asset do Lovable ou caminho direto em /assets/
+const CHARACTER_IMAGE_SRC = characterAsset?.url || "/assets/personagem.png";
 
 /**
  * Hook de Mouse Parallax suave com interpolação contínua (lerp)
@@ -243,7 +247,13 @@ function Index() {
 /**
  * Estrela cadente flexível apontando para /assets/estrela-cadente.png
  */
-function ArcShootingStar({ mouse, scrollY }: { mouse: { x: number; y: number }; scrollY: number }) {
+function ArcShootingStar({
+  mouse,
+  scrollY,
+}: {
+  mouse: { x: number; y: number };
+  scrollY: number;
+}) {
   return (
     <div
       className="pointer-events-none fixed left-1/2 top-[4%] z-30 w-[min(90vw,56rem)] -translate-x-1/2 transition-transform duration-75"
@@ -470,7 +480,13 @@ function SaveTheDateScene({
  * - Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle) ao redor da data.
  * - Névoa difusa (blur-3xl) em tom azul-púrpura (#2b3068).
  */
-function DateScene({ mouse, scrollY }: { mouse: { x: number; y: number }; scrollY: number }) {
+function DateScene({
+  mouse,
+  scrollY,
+}: {
+  mouse: { x: number; y: number };
+  scrollY: number;
+}) {
   return (
     <motion.section
       aria-labelledby="date-title"
@@ -522,14 +538,7 @@ function DateScene({ mouse, scrollY }: { mouse: { x: number; y: number }; scroll
             { top: "-18%", left: "-10%", size: 24, delay: 0.1, duration: 3.2, floatAmplitude: 8 },
             { top: "6%", right: "-16%", size: 20, delay: 0.6, duration: 3.6, floatAmplitude: 10 },
             { bottom: "16%", left: "-14%", size: 26, delay: 1.2, duration: 3.4, floatAmplitude: 9 },
-            {
-              bottom: "-12%",
-              right: "-8%",
-              size: 22,
-              delay: 1.8,
-              duration: 4.0,
-              floatAmplitude: 7,
-            },
+            { bottom: "-12%", right: "-8%", size: 22, delay: 1.8, duration: 4.0, floatAmplitude: 7 },
             { top: "42%", left: "-22%", size: 16, delay: 0.4, duration: 2.8, floatAmplitude: 6 },
             { top: "35%", right: "-20%", size: 18, delay: 1.5, duration: 3.5, floatAmplitude: 8 },
           ]}
@@ -600,7 +609,13 @@ function DateScene({ mouse, scrollY }: { mouse: { x: number; y: number }; scroll
  * - Seção do Nome: 'GABRIELA' centralizado de forma ampla com no mínimo 48px (my-12) de distância dos blocos adjacentes.
  * - Flutuação assíncrona com frequências distintas para cada elemento.
  */
-function FinalScene({ mouse, scrollY }: { mouse: { x: number; y: number }; scrollY: number }) {
+function FinalScene({
+  mouse,
+  scrollY,
+}: {
+  mouse: { x: number; y: number };
+  scrollY: number;
+}) {
   return (
     <motion.section
       aria-labelledby="gabriela-title"
@@ -711,7 +726,7 @@ function FinalScene({ mouse, scrollY }: { mouse: { x: number; y: number }; scrol
  * Personagem flutuante com Efeito Antigravity
  * - Flutua com amplitude de 12px em ciclo de 5s.
  * - Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle).
- * - Tag flexível <img src="/assets/personagem.png" /> preservando o aspect ratio (object-contain).
+ * - Tag flexível <img src="..." /> preservando o aspect ratio (object-contain).
  * - Névoa difusa azul-púrpura (#2b3068) ao redor.
  */
 function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
@@ -756,10 +771,10 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
         ]}
       />
 
-      {/* Tag de imagem flexível apontando para /assets/personagem.png com object-contain */}
+      {/* Tag de imagem flexível com object-contain preservando proporções */}
       {imageLoaded && (
         <img
-          src="/assets/personagem.png"
+          src={CHARACTER_IMAGE_SRC}
           alt="Personagem Gabriela"
           className="relative z-10 max-h-[280px] w-auto max-w-[85vw] object-contain drop-shadow-[0_0_28px_rgba(43,48,104,0.7)] sm:max-h-[350px]"
           onError={() => setImageLoaded(false)}
