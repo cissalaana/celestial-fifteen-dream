@@ -1,11 +1,11 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronRight, RotateCcw, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { CelestialStarfield } from "@/components/celestial-starfield";
 import { Button } from "@/components/ui/button";
-import characterAsset from "@/assets/personagem-a-noite-de-uma-estrela.png";
+import characterAsset from "@/assets/personagem-a-noite-de-uma-estrela.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
 
 const sceneDuration = [5200, 6500, 6500, 6000];
 const WHATSAPP_LINK =
-  "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
+  "https://web.whatsapp.com/send?phone=5581992895842&text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 function Index() {
   const [scene, setScene] = useState(0);
@@ -326,6 +326,8 @@ function DateScene() {
 }
 
 function CharacterScene() {
+  const reducedMotion = useReducedMotion();
+
   return (
     <motion.section
       aria-label="A noite de uma estrela"
@@ -339,11 +341,11 @@ function CharacterScene() {
       <div className="character-glow" aria-hidden />
       <TwinkleStars variant="character" />
       <motion.img
-        src={characterAsset}
+        src={characterAsset.url}
         alt="Jovem de costas com vestido azul estrelado e laço no cabelo"
         className="character-illustration relative z-10 max-h-[72svh] w-auto max-w-[min(92vw,38rem)] object-contain"
-        animate={{ y: [0, -6, 0, 6, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        animate={reducedMotion ? { y: 0 } : { y: [0, -6, 0, 6, 0] }}
+        transition={reducedMotion ? { duration: 0 } : { duration: 4, repeat: Infinity, ease: "easeInOut" }}
       />
     </motion.section>
   );
