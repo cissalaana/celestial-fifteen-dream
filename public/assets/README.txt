@@ -1,6 +1,7 @@
 Substitua os arquivos abaixo pelos seus PNGs transparentes, mantendo exatamente estes nomes:
 
 - estrela-cadente.png
+- personagem.png
 - brilho-anos-a.png
 - brilho-anos-o.png
 

@@ -23,7 +23,25 @@ export function CelestialStarfield() {
     let animationFrame = 0;
     let width = 0;
     let height = 0;
+
+    // Paralaxe suave com amortecimento (lerp)
+    let targetMouseX = 0;
+    let targetMouseY = 0;
+    let currentMouseX = 0;
+    let currentMouseY = 0;
+    let targetScrollY = 0;
+    let currentScrollY = 0;
+
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const onPointerMove = (e: PointerEvent) => {
+      targetMouseX = (e.clientX / (window.innerWidth || 1) - 0.5) * 2;
+      targetMouseY = (e.clientY / (window.innerHeight || 1) - 0.5) * 2;
+    };
+
+    const onScroll = () => {
+      targetScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    };
 
     const resize = () => {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -47,16 +65,35 @@ export function CelestialStarfield() {
 
     const draw = (time: number) => {
       context.clearRect(0, 0, width, height);
+
+      // Interpolação suave do mouse e scroll
+      currentMouseX += (targetMouseX - currentMouseX) * 0.05;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.05;
+      currentScrollY += (targetScrollY - currentScrollY) * 0.06;
+
       const style = getComputedStyle(document.documentElement);
       const starColor = style.getPropertyValue("--star").trim() || "white";
       const silverColor = style.getPropertyValue("--silver").trim() || "white";
 
+      // Deslocamento de paralaxe: estrelas se movem bem devagar (0.015 no mouse, 0.08 no scroll)
+      const mouseShiftX = reducedMotion ? 0 : currentMouseX * 12;
+      const mouseShiftY = reducedMotion ? 0 : currentMouseY * 10;
+      const scrollShiftY = reducedMotion ? 0 : -currentScrollY * 0.08;
+
       stars.forEach((star, index) => {
+        const depthFactor = 0.4 + star.radius * 0.4;
+        let px = star.x + mouseShiftX * depthFactor;
+        let py = star.y + (mouseShiftY + scrollShiftY) * depthFactor;
+
+        // Manter estrelas dentro da tela com wrap contínuo
+        px = ((px % width) + width) % width;
+        py = ((py % height) + height) % height;
+
         const twinkle = reducedMotion ? 0.8 : 0.5 + Math.sin(time * star.speed + star.phase) * 0.5;
         context.globalAlpha = Math.max(0.08, star.alpha * twinkle);
         context.fillStyle = index % 9 === 0 ? silverColor : starColor;
         context.beginPath();
-        context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        context.arc(px, py, star.radius, 0, Math.PI * 2);
         context.fill();
       });
 
@@ -67,9 +104,13 @@ export function CelestialStarfield() {
     resize();
     draw(0);
     window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(animationFrame);
     };
   }, []);
