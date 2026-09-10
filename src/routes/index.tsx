@@ -619,7 +619,7 @@ function FinalScene({
   return (
     <motion.section
       aria-labelledby="gabriela-title"
-      className="relative flex w-full max-w-4xl flex-col items-center text-center"
+      className="relative flex w-full max-w-4xl flex-col items-center justify-between text-center pt-2 pb-0"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1.8 }}
@@ -632,159 +632,165 @@ function FinalScene({
         className="celestial-nebula-mist size-[min(92vw,48rem)] -translate-x-1/2 -translate-y-1/2 opacity-75"
         style={{
           left: "50%",
-          top: "45%",
+          top: "38%",
           transform: `translate(-50%, -50%) translate3d(${mouse.x * 12}px, ${mouse.y * 12}px, 0)`,
         }}
         aria-hidden
       />
 
-      {/* Personagem com flutuação antigravity (12px / 5s), sparkles de 4 pontas e proporção flexível */}
+      {/* Bloco de Conteúdo Superior e Intermediário */}
+      <div className="relative z-20 flex w-full flex-col items-center">
+        {/* Seção do Nome: 'GABRIELA' centralizado de forma ampla, mantendo no mínimo 48px (my-12) de distância */}
+        <motion.h1
+          id="gabriela-title"
+          className="my-10 font-display text-[clamp(3.4rem,11vw,7.8rem)] leading-none tracking-[0.12em] text-star drop-shadow-[0_0_32px_rgba(235,238,255,0.7)] sm:my-12"
+          initial={{ opacity: 0, scale: 0.86 }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            y: [-6, 6, -6],
+          }}
+          transition={{
+            opacity: { delay: 0.4, duration: 1.3, ease: [0.16, 1, 0.3, 1] },
+            scale: { delay: 0.4, duration: 1.3, ease: [0.16, 1, 0.3, 1] },
+            y: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+          }}
+        >
+          GABRIELA
+        </motion.h1>
+
+        {/* Linha de celebração dos 15 Anos */}
+        <motion.div
+          className="flex items-baseline justify-center gap-4 sm:gap-6"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+            y: [-4, 4, -4],
+          }}
+          transition={{
+            opacity: { delay: 0.8, duration: 1.2 },
+            y: { duration: 4.1, repeat: Infinity, ease: "easeInOut", delay: 0.2 },
+          }}
+        >
+          <span className="h-px w-10 bg-silver sm:w-24" />
+          <span className="font-script text-6xl leading-none text-silver sm:text-7xl">15</span>
+          <YearsWord />
+          <span className="h-px w-10 bg-silver sm:w-24" />
+        </motion.div>
+
+        {/* Frase poética */}
+        <motion.p
+          className="mt-8 max-w-2xl font-label text-[0.7rem] uppercase leading-7 tracking-[0.24em] text-silver sm:text-sm sm:leading-8"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{
+            opacity: 1,
+            y: [-3, 3, -3],
+          }}
+          transition={{
+            opacity: { delay: 1.1, duration: 1.2 },
+            y: { duration: 4.4, repeat: Infinity, ease: "easeInOut", delay: 0.4 },
+          }}
+        >
+          Sob um céu de sonhos e estrelas,
+          <br className="hidden sm:block" /> uma noite inesquecível nos espera!
+        </motion.p>
+
+        {/* Bloco de Confirmação e Chamada */}
+        <motion.div
+          className="mt-8 flex flex-col items-center gap-4"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{
+            opacity: 1,
+            y: [-4, 4, -4],
+          }}
+          transition={{
+            opacity: { delay: 1.4, duration: 1.2 },
+            y: { duration: 3.9, repeat: Infinity, ease: "easeInOut", delay: 0.3 },
+          }}
+        >
+          <p className="max-w-lg font-label text-[0.56rem] uppercase leading-5 tracking-[0.2em] text-silver/75 sm:text-[0.66rem]">
+            Confirme a sua presença para receber o convite oficial
+          </p>
+          <Button asChild variant="celestial" size="celestial">
+            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
+              Confirmar presença
+            </a>
+          </Button>
+        </motion.div>
+      </div>
+
+      {/* Personagem posicionada na parte de baixo, ocultando qualquer corte inferior */}
       <FloatingCharacter mouse={mouse} />
-
-      {/* Seção do Nome: 'GABRIELA' centralizado de forma ampla, mantendo no mínimo 48px (my-12) de distância */}
-      <motion.h1
-        id="gabriela-title"
-        className="my-12 font-display text-[clamp(3.4rem,11vw,7.8rem)] leading-none tracking-[0.12em] text-star drop-shadow-[0_0_32px_rgba(235,238,255,0.7)]"
-        initial={{ opacity: 0, scale: 0.86 }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-          y: [-6, 6, -6],
-        }}
-        transition={{
-          opacity: { delay: 0.6, duration: 1.3, ease: [0.16, 1, 0.3, 1] },
-          scale: { delay: 0.6, duration: 1.3, ease: [0.16, 1, 0.3, 1] },
-          y: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
-        }}
-      >
-        GABRIELA
-      </motion.h1>
-
-      {/* Linha de celebração dos 15 Anos */}
-      <motion.div
-        className="flex items-baseline justify-center gap-4 sm:gap-6"
-        initial={{ opacity: 0 }}
-        animate={{
-          opacity: 1,
-          y: [-4, 4, -4],
-        }}
-        transition={{
-          opacity: { delay: 1.0, duration: 1.2 },
-          y: { duration: 4.1, repeat: Infinity, ease: "easeInOut", delay: 0.2 },
-        }}
-      >
-        <span className="h-px w-10 bg-silver sm:w-24" />
-        <span className="font-script text-6xl leading-none text-silver sm:text-7xl">15</span>
-        <YearsWord />
-        <span className="h-px w-10 bg-silver sm:w-24" />
-      </motion.div>
-
-      {/* Frase poética */}
-      <motion.p
-        className="mt-8 max-w-2xl font-label text-[0.7rem] uppercase leading-7 tracking-[0.24em] text-silver sm:text-sm sm:leading-8"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{
-          opacity: 1,
-          y: [-3, 3, -3],
-        }}
-        transition={{
-          opacity: { delay: 1.3, duration: 1.2 },
-          y: { duration: 4.4, repeat: Infinity, ease: "easeInOut", delay: 0.4 },
-        }}
-      >
-        Sob um céu de sonhos e estrelas,
-        <br className="hidden sm:block" /> uma noite inesquecível nos espera!
-      </motion.p>
-
-      {/* Bloco de Confirmação e Chamada */}
-      <motion.div
-        className="mt-8 flex flex-col items-center gap-4 pb-8"
-        initial={{ opacity: 0, y: 18 }}
-        animate={{
-          opacity: 1,
-          y: [-4, 4, -4],
-        }}
-        transition={{
-          opacity: { delay: 1.6, duration: 1.2 },
-          y: { duration: 3.9, repeat: Infinity, ease: "easeInOut", delay: 0.3 },
-        }}
-      >
-        <p className="max-w-lg font-label text-[0.56rem] uppercase leading-5 tracking-[0.2em] text-silver/75 sm:text-[0.66rem]">
-          Confirme a sua presença para receber o convite oficial
-        </p>
-        <Button asChild variant="celestial" size="celestial">
-          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
-            Confirmar presença
-          </a>
-        </Button>
-      </motion.div>
     </motion.section>
   );
 }
 
 /**
- * Personagem flutuante com Efeito Antigravity
- * - Flutua com amplitude de 12px em ciclo de 5s.
- * - Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle).
- * - Tag flexível <img src="..." /> preservando o aspect ratio (object-contain).
- * - Névoa difusa azul-púrpura (#2b3068) ao redor.
+ * Personagem posicionada na parte de baixo com Efeito Antigravity
+ * - A imagem fica assentada na parte inferior (object-bottom), sem deixar a base visível.
+ * - Gradiente suave de fusão na base com #04050d para garantir que nenhum corte seja perceptível.
+ * - Flutuação suave com amplitude de 8px em ciclo de 5s.
+ * - Brilhos em formato de cruz de 4 pontas (twinkle) ao redor da menina.
  */
 function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
   const [imageLoaded, setImageLoaded] = useState(true);
 
   return (
     <motion.div
-      className="relative flex items-center justify-center pt-2"
-      initial={{ opacity: 0, scale: 0.85 }}
+      className="relative z-10 mt-8 flex w-full flex-col items-center justify-end overflow-hidden"
+      initial={{ opacity: 0, y: 30 }}
       animate={{
         opacity: 1,
-        scale: 1,
-        y: [-12, 12, -12],
-        rotate: [-1, 1, -1],
+        y: [-6, 2, -6],
       }}
       transition={{
-        opacity: { delay: 0.3, duration: 1.2 },
-        scale: { delay: 0.3, duration: 1.2 },
+        opacity: { delay: 0.4, duration: 1.2 },
         y: { duration: 5.0, repeat: Infinity, ease: "easeInOut" },
-        rotate: { duration: 6.0, repeat: Infinity, ease: "easeInOut" },
       }}
       style={{
-        transform: `translate3d(${mouse.x * 32}px, ${mouse.y * 24}px, 0)`,
+        transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 14}px, 0)`,
       }}
     >
       {/* Névoa de iluminação difusa (blur-3xl) atrás da personagem */}
       <div
-        className="celestial-nebula-mist size-[min(80vw,26rem)] -translate-x-1/2 -translate-y-1/2 opacity-70"
-        style={{ left: "50%", top: "50%" }}
+        className="celestial-nebula-mist size-[min(80vw,28rem)] -translate-x-1/2 opacity-75"
+        style={{ left: "50%", bottom: "0%" }}
         aria-hidden
       />
 
       {/* Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle) ao redor da personagem */}
       <SparkleCluster
         sparkles={[
-          { top: "-14%", left: "10%", size: 24, delay: 0.1, duration: 3.2, floatAmplitude: 8 },
-          { top: "20%", right: "-12%", size: 20, delay: 0.7, duration: 3.6, floatAmplitude: 10 },
-          { bottom: "8%", left: "-14%", size: 26, delay: 1.3, duration: 3.4, floatAmplitude: 9 },
-          { bottom: "-10%", right: "12%", size: 18, delay: 1.9, duration: 4.0, floatAmplitude: 7 },
-          { top: "5%", right: "18%", size: 16, delay: 0.4, duration: 2.8, floatAmplitude: 6 },
-          { bottom: "35%", left: "-8%", size: 18, delay: 1.6, duration: 3.7, floatAmplitude: 8 },
+          { top: "6%", left: "14%", size: 24, delay: 0.1, duration: 3.2, floatAmplitude: 8 },
+          { top: "20%", right: "12%", size: 20, delay: 0.7, duration: 3.6, floatAmplitude: 10 },
+          { top: "45%", left: "10%", size: 22, delay: 1.3, duration: 3.4, floatAmplitude: 8 },
+          { top: "35%", right: "15%", size: 18, delay: 1.9, duration: 4.0, floatAmplitude: 7 },
+          { top: "2%", right: "22%", size: 16, delay: 0.4, duration: 2.8, floatAmplitude: 6 },
         ]}
       />
 
-      {/* Tag de imagem flexível com object-contain preservando proporções */}
+      {/* Container da imagem com base ajustada e gradiente de fusão */}
       {imageLoaded && (
-        <img
-          src={CHARACTER_IMAGE_SRC}
-          alt="Personagem Gabriela"
-          className="relative z-10 max-h-[280px] w-auto max-w-[85vw] object-contain drop-shadow-[0_0_28px_rgba(43,48,104,0.7)] sm:max-h-[350px]"
-          onError={() => setImageLoaded(false)}
-        />
+        <div className="relative flex items-end justify-center">
+          <img
+            src={CHARACTER_IMAGE_SRC}
+            alt="Personagem Gabriela"
+            className="relative z-10 max-h-[38svh] w-auto max-w-[min(90vw,26rem)] object-contain object-bottom drop-shadow-[0_0_32px_rgba(43,48,104,0.85)] sm:max-h-[48svh]"
+            onError={() => setImageLoaded(false)}
+          />
+
+          {/* Gradiente de fusão perfeito na base para garantir que a parte de baixo nunca seja visível */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-14 bg-gradient-to-t from-space-black via-space-black/85 to-transparent sm:h-20"
+            aria-hidden
+          />
+        </div>
       )}
 
       {/* Fallback celestial delicado caso a imagem não esteja pronta */}
       {!imageLoaded && (
-        <div className="relative z-10 flex size-36 items-center justify-center rounded-full border border-silver/20 bg-silver/5 shadow-celestial">
-          <span className="font-script text-4xl text-silver/80">G</span>
+        <div className="relative z-10 mb-4 flex size-32 items-center justify-center rounded-full border border-silver/20 bg-silver/5 shadow-celestial">
+          <span className="font-script text-3xl text-silver/80">G</span>
         </div>
       )}
     </motion.div>
