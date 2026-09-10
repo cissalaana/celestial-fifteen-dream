@@ -5,6 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { CelestialStarfield } from "@/components/celestial-starfield";
 import { Button } from "@/components/ui/button";
+import characterAsset from "@/assets/personagem-a-noite-de-uma-estrela.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const sceneDuration = [5200, 6500, 6500];
+const sceneDuration = [5200, 6500, 6500, 6000];
 const WHATSAPP_LINK =
   "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
@@ -37,7 +38,7 @@ function Index() {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    if (scene >= 3) return;
+    if (scene >= 4) return;
     const timeout = window.setTimeout(
       () => setScene((current) => current + 1),
       sceneDuration[scene],
@@ -91,7 +92,8 @@ function Index() {
           {scene === 0 && <GateScene key="gate" />}
           {scene === 1 && <SaveTheDateScene key="save" />}
           {scene === 2 && <DateScene key="date" />}
-          {scene === 3 && <FinalScene key="final" />}
+          {scene === 3 && <CharacterScene key="character" />}
+          {scene === 4 && <FinalScene key="final" />}
         </AnimatePresence>
       </div>
 
@@ -99,7 +101,7 @@ function Index() {
         aria-label="Progresso do convite"
         className="fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2"
       >
-        {[0, 1, 2, 3].map((step) => (
+        {[0, 1, 2, 3, 4].map((step) => (
           <button
             key={step}
             type="button"
@@ -111,18 +113,18 @@ function Index() {
         ))}
       </nav>
 
-      {scene < 3 && (
+      {scene < 4 && (
         <Button
           type="button"
           variant="ghost"
-          onClick={() => setScene(3)}
+          onClick={() => setScene(4)}
           className="fixed right-16 top-4 z-40 font-label text-[0.6rem] uppercase tracking-[0.18em] text-silver/65 hover:bg-silver/10 hover:text-star sm:right-20 sm:top-7"
         >
           Pular <ChevronRight />
         </Button>
       )}
 
-      {scene === 3 && (
+      {scene === 4 && (
         <Button
           type="button"
           size="icon"
@@ -211,6 +213,7 @@ function SaveTheDateScene() {
       transition={{ duration: 1.7 }}
     >
       <div className="text-glow-island" aria-hidden />
+      <TwinkleStars />
       <div
         className="absolute left-1/2 top-1/2 size-[min(80vw,32rem)] -translate-x-1/2 -translate-y-1/2"
         aria-hidden
@@ -280,6 +283,7 @@ function DateScene() {
       transition={{ duration: 1.7 }}
     >
       <div className="text-glow-island" aria-hidden />
+      <TwinkleStars />
       <motion.p
         className="font-label text-[0.62rem] uppercase tracking-[0.5em] text-silver sm:text-xs"
         initial={{ opacity: 0, y: 8 }}
@@ -321,6 +325,30 @@ function DateScene() {
   );
 }
 
+function CharacterScene() {
+  return (
+    <motion.section
+      aria-label="A noite de uma estrela"
+      className="relative flex w-full max-w-3xl items-center justify-center text-center"
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 1.03, y: -24 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="character-glow" aria-hidden />
+      <TwinkleStars variant="character" />
+      <motion.img
+        src={characterAsset}
+        alt="Jovem de costas com vestido azul estrelado e laço no cabelo"
+        className="character-illustration relative z-10 max-h-[72svh] w-auto max-w-[min(92vw,38rem)] object-contain"
+        animate={{ y: [0, -6, 0, 6, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </motion.section>
+  );
+}
+
 function FinalScene() {
   return (
     <motion.section
@@ -331,6 +359,7 @@ function FinalScene() {
       transition={{ duration: 1.8 }}
     >
       <div className="text-glow-island" aria-hidden />
+      <TwinkleStars />
       <motion.h1
         id="gabriela-title"
         className="font-display text-[clamp(3.3rem,12vw,8rem)] leading-none tracking-[0.08em] text-star drop-shadow-[0_0_24px_var(--silver)]"
@@ -380,6 +409,25 @@ function FinalScene() {
         </Button>
       </motion.div>
     </motion.section>
+  );
+}
+
+function TwinkleStars({ variant = "text" }: { variant?: "text" | "character" }) {
+  const positions =
+    variant === "character"
+      ? ["left-[9%] top-[18%]", "right-[8%] top-[28%]", "left-[4%] bottom-[25%]", "right-[4%] bottom-[15%]"]
+      : ["left-[-8%] top-[8%]", "right-[-6%] top-[28%]", "left-[2%] bottom-[8%]"];
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>
+      {positions.map((position, index) => (
+        <span
+          key={position}
+          className={`twinkle-star ${position}`}
+          style={{ animationDelay: `${index * 0.7}s` }}
+        />
+      ))}
+    </div>
   );
 }
 
