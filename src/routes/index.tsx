@@ -399,11 +399,7 @@ function FinalScene() {
           Confirme a sua presença para receber o convite oficial
         </p>
         <Button asChild variant="celestial" size="celestial">
-          <a
-            href={WHATSAPP_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
             Confirmar presença
           </a>
         </Button>
@@ -415,7 +411,12 @@ function FinalScene() {
 function TwinkleStars({ variant = "text" }: { variant?: "text" | "character" }) {
   const positions =
     variant === "character"
-      ? ["left-[9%] top-[18%]", "right-[8%] top-[28%]", "left-[4%] bottom-[25%]", "right-[4%] bottom-[15%]"]
+      ? [
+          "left-[9%] top-[18%]",
+          "right-[8%] top-[28%]",
+          "left-[4%] bottom-[25%]",
+          "right-[4%] bottom-[15%]",
+        ]
       : ["left-[-8%] top-[8%]", "right-[-6%] top-[28%]", "left-[2%] bottom-[8%]"];
 
   return (

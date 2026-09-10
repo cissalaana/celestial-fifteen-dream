@@ -87,12 +87,7 @@ export function CelestialStarfield() {
       shootingStars.forEach((shootingStar) => {
         const tailX = shootingStar.x + shootingStar.length;
         const tailY = shootingStar.y - shootingStar.length * 0.42;
-        const gradient = context.createLinearGradient(
-          shootingStar.x,
-          shootingStar.y,
-          tailX,
-          tailY,
-        );
+        const gradient = context.createLinearGradient(shootingStar.x, shootingStar.y, tailX, tailY);
         gradient.addColorStop(0, silverColor);
         gradient.addColorStop(0.18, silverColor);
         gradient.addColorStop(1, "transparent");
