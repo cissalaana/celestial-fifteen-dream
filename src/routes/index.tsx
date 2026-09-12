@@ -184,17 +184,23 @@ function Index() {
       {/* Camada 0: Fundo estelar com paralaxe lenta */}
       <CelestialStarfield />
 
-      {/* Sistema de Iluminação de Nebulosa Assimétrica (Multi-layer Mesh Blur) */}
+      {/* Sistema de Iluminação de Nebulosa Flutuante (Lava Lamp / Nebulosa Dinâmica) */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
-        {/* Glow Inferior Esquerdo (Luz Principal): Foco de luz em azul elétrico/púrpura (#3537B1) com desfoque alto */}
+        {/* Glow Inferior Esquerdo (Luz Principal): Movimento lento e transição suave de azul para roxo (16s) */}
         <div
-          className="absolute -bottom-[20%] -left-[15%] size-[min(130vw,70rem)] rounded-full bg-[#3537B1]/40 blur-[80px] sm:blur-[110px]"
+          className="nebula-lava-primary absolute -bottom-[20%] -left-[15%] size-[min(130vw,70rem)] rounded-full"
           aria-hidden
         />
 
-        {/* Glow Superior Direito (Luz Secundária): Ponto de luz mais suave e difuso (#3D4069) para equilíbrio diagonal */}
+        {/* Glow Superior Direito (Luz Secundária): Movimento diagonal suave e transição de roxo para azul (20s) */}
         <div
-          className="absolute -top-[18%] -right-[15%] size-[min(120vw,60rem)] rounded-full bg-[#3D4069]/32 blur-[90px] sm:blur-[120px]"
+          className="nebula-lava-secondary absolute -top-[18%] -right-[15%] size-[min(120vw,60rem)] rounded-full"
+          aria-hidden
+        />
+
+        {/* Glow Intermediário Suave: Movimento orgânico com variação sutil (18s) */}
+        <div
+          className="nebula-lava-tertiary absolute left-[25%] top-[50%] size-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full"
           aria-hidden
         />
       </div>
