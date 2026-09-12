@@ -657,9 +657,9 @@ function FinalScene({
           GABRIELA
         </motion.h1>
 
-        {/* Linha de celebração dos 15 Anos - estático */}
+        {/* Linha de celebração dos 15 Anos - estático com largura balanceada */}
         <motion.div
-          className="flex items-baseline justify-center gap-4 sm:gap-6"
+          className="flex w-full max-w-[19rem] items-center justify-center gap-3 sm:max-w-[27rem] sm:gap-5"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
@@ -667,10 +667,12 @@ function FinalScene({
             duration: 1.0,
           }}
         >
-          <span className="h-px w-10 bg-silver sm:w-24" />
-          <span className="font-script text-6xl leading-none text-silver sm:text-7xl">15</span>
-          <YearsWord />
-          <span className="h-px w-10 bg-silver sm:w-24" />
+          <span className="h-px flex-1 bg-silver/75" />
+          <div className="flex items-baseline gap-3 sm:gap-5">
+            <span className="font-script text-6xl leading-none text-silver sm:text-7xl">15</span>
+            <YearsWord />
+          </div>
+          <span className="h-px flex-1 bg-silver/75" />
         </motion.div>
 
         {/* Frase poética - estático */}
@@ -687,9 +689,9 @@ function FinalScene({
           <br className="hidden sm:block" /> uma noite inesquecível nos espera!
         </motion.p>
 
-        {/* Bloco de Confirmação e Chamada - com espaçamento amplo e botão ampliado para máxima legibilidade */}
+        {/* Bloco de Confirmação e Chamada - com a mesma largura da linha do 15 anos e frase balanceada sem palavra órfã */}
         <motion.div
-          className="mt-10 flex flex-col items-center gap-6 sm:mt-14 sm:gap-8"
+          className="mt-10 flex w-full flex-col items-center gap-6 sm:mt-14 sm:gap-8"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
@@ -697,14 +699,16 @@ function FinalScene({
             duration: 1.0,
           }}
         >
-          <p className="max-w-lg font-label text-[0.68rem] uppercase leading-relaxed tracking-[0.24em] text-silver/80 sm:text-xs">
-            Confirme a sua presença para receber o convite oficial
+          <p className="max-w-md text-balance text-center font-label text-[0.68rem] uppercase leading-relaxed tracking-[0.22em] text-silver/85 sm:text-xs">
+            Confirme a sua presença
+            <br />
+            para receber o convite oficial
           </p>
           <Button
             asChild
             variant="celestial"
             size="celestial"
-            className="h-14 px-9 text-xs font-semibold tracking-[0.24em] shadow-[0_0_24px_rgba(235,238,255,0.25)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_36px_rgba(255,255,255,0.45)] sm:h-16 sm:px-14 sm:text-sm sm:tracking-[0.28em]"
+            className="h-14 w-full max-w-[19rem] justify-center px-4 text-xs font-semibold tracking-[0.22em] shadow-[0_0_24px_rgba(235,238,255,0.25)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_36px_rgba(255,255,255,0.45)] sm:h-16 sm:max-w-[27rem] sm:text-sm sm:tracking-[0.26em]"
           >
             <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
               Confirmar presença
