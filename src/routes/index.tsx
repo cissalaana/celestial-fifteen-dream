@@ -688,9 +688,9 @@ function FinalScene({
           <br className="hidden sm:block" /> uma noite inesquecível nos espera!
         </motion.p>
 
-        {/* Bloco de Confirmação e Chamada - estático */}
+        {/* Bloco de Confirmação e Chamada - com espaçamento amplo e botão ampliado para máxima legibilidade */}
         <motion.div
-          className="mt-8 flex flex-col items-center gap-4"
+          className="mt-10 flex flex-col items-center gap-6 sm:mt-14 sm:gap-8"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
@@ -698,10 +698,15 @@ function FinalScene({
             duration: 1.0,
           }}
         >
-          <p className="max-w-lg font-label text-[0.56rem] uppercase leading-5 tracking-[0.2em] text-silver/75 sm:text-[0.66rem]">
+          <p className="max-w-lg font-label text-[0.68rem] uppercase leading-relaxed tracking-[0.24em] text-silver/80 sm:text-xs">
             Confirme a sua presença para receber o convite oficial
           </p>
-          <Button asChild variant="celestial" size="celestial">
+          <Button
+            asChild
+            variant="celestial"
+            size="celestial"
+            className="h-14 px-9 text-xs font-semibold tracking-[0.24em] shadow-[0_0_24px_rgba(235,238,255,0.25)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_36px_rgba(255,255,255,0.45)] sm:h-16 sm:px-14 sm:text-sm sm:tracking-[0.28em]"
+          >
             <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
               Confirmar presença
             </a>

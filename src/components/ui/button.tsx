@@ -17,14 +17,14 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         celestial:
-          "border border-silver/20 bg-star/5 font-label uppercase text-silver shadow-celestial backdrop-blur-[10px] hover:border-silver/40 hover:bg-star/10 hover:text-star",
+          "rounded-full border border-silver/30 bg-star/10 font-label uppercase text-silver shadow-celestial backdrop-blur-[12px] hover:border-silver/60 hover:bg-star/20 hover:text-star hover:shadow-[0_0_32px_rgba(235,238,255,0.4)] transition-all duration-300 active:scale-[0.98]",
       },
       size: {
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
-        celestial: "h-12 px-7 text-[0.7rem] tracking-[0.2em]",
+        celestial: "h-14 px-8 text-xs tracking-[0.22em] sm:h-16 sm:px-12 sm:text-sm sm:tracking-[0.25em]",
       },
     },
     defaultVariants: {
