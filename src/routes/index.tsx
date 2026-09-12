@@ -732,7 +732,7 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
 
   return (
     <div
-      className="relative z-10 mt-6 flex w-full flex-col items-center justify-end overflow-hidden"
+      className="relative z-10 mt-14 flex w-full flex-col items-center justify-end overflow-hidden sm:mt-20 md:mt-24"
       style={{
         transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 14}px, 0)`,
       }}
@@ -772,15 +772,15 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
           <img
             src={CHARACTER_IMAGE_SRC}
             alt="Personagem Gabriela"
-            className="relative z-10 max-h-[38svh] w-auto max-w-[min(90vw,26rem)] object-contain object-bottom sm:max-h-[48svh]"
+            className="relative z-10 max-h-[36svh] w-auto max-w-[min(88vw,24rem)] object-contain object-bottom sm:max-h-[46svh]"
             style={{
               filter:
-                "drop-shadow(0 0 14px rgba(96, 145, 255, 0.45)) drop-shadow(0 0 28px rgba(245, 212, 130, 0.35))",
+                "drop-shadow(0 0 18px rgba(96, 145, 255, 0.35)) drop-shadow(0 0 36px rgba(245, 212, 130, 0.22))",
             }}
             onError={() => setImageLoaded(false)}
           />
 
-          {/* Gradiente de fusão perfeito na base para garantir que a parte de baixo nunca seja visível */}
+          {/* Gradiente de fusão perfeito na base para garantir acabamento estelar sem corte */}
           <div
             className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 bg-gradient-to-t from-space-black via-space-black/90 to-transparent sm:h-24"
             aria-hidden
