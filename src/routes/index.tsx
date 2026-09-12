@@ -184,14 +184,22 @@ function Index() {
       {/* Camada 0: Fundo estelar com paralaxe lenta */}
       <CelestialStarfield />
 
-      {/* Pontos adicionais de iluminação suave (glows) espalhados com baixa opacidade nas cores #3537B1 e #3D4069 */}
+      {/* Sistema de Iluminação de Nebulosa Assimétrica (Multi-layer Mesh Blur) */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
-        <div className="absolute -left-[15%] top-[12%] size-[42rem] rounded-full bg-[#3537B1]/12 blur-[7.5rem] sm:size-[54rem]" />
-        <div className="absolute -right-[15%] top-[25%] size-[38rem] rounded-full bg-[#3D4069]/15 blur-[7rem] sm:size-[48rem]" />
-        <div className="absolute left-[20%] bottom-[8%] size-[44rem] rounded-full bg-[#3537B1]/10 blur-[8rem] sm:size-[56rem]" />
+        {/* Glow Inferior Esquerdo (Luz Principal): Foco de luz em azul elétrico/púrpura (#3537B1) com desfoque alto */}
+        <div
+          className="absolute -bottom-[20%] -left-[15%] size-[min(130vw,70rem)] rounded-full bg-[#3537B1]/40 blur-[80px] sm:blur-[110px]"
+          aria-hidden
+        />
+
+        {/* Glow Superior Direito (Luz Secundária): Ponto de luz mais suave e difuso (#3D4069) para equilíbrio diagonal */}
+        <div
+          className="absolute -top-[18%] -right-[15%] size-[min(120vw,60rem)] rounded-full bg-[#3D4069]/32 blur-[90px] sm:blur-[120px]"
+          aria-hidden
+        />
       </div>
 
-      {/* Camada 1: Vinheta suave em direção ao tom escuro base (#0A0F42) para contraste */}
+      {/* Camada 1: Vinheta suave em direção ao tom escuro base (#080C2A) para contraste periférico */}
       <div className="celestial-vignette" aria-hidden />
 
       {/* Áudio ambiente e ruído celestial sutil */}

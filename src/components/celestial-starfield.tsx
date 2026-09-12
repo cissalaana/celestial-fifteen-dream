@@ -170,5 +170,5 @@ export function CelestialStarfield() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-0" aria-hidden />;
+  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-[1]" aria-hidden />;
 }
