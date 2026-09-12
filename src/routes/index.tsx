@@ -6,7 +6,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CelestialStarfield } from "@/components/celestial-starfield";
 import { SparkleCluster, FourPointSparkle } from "@/components/celestial-sparkle";
 import { Button } from "@/components/ui/button";
-import characterAsset from "@/assets/personagem-a-noite-de-uma-estrela.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,8 +33,8 @@ const sceneDuration = [5200, 6500, 6800];
 const WHATSAPP_LINK =
   "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
-// Suporte flexível a asset do Lovable ou caminho direto em /assets/
-const CHARACTER_IMAGE_SRC = characterAsset?.url || "/assets/personagem.png";
+// Novo vetor/PNG transparente da personagem
+const CHARACTER_IMAGE_SRC = "/assets/personagem.png";
 
 /**
  * Hook de Mouse Parallax suave com interpolação contínua (lerp)
@@ -723,25 +722,17 @@ function FinalScene({
 /**
  * Personagem posicionada na parte de baixo com Efeito Antigravity
  * - A imagem fica assentada na parte inferior (object-bottom), sem deixar a base visível.
- * - Gradiente suave de fusão na base com #04050d para garantir que nenhum corte seja perceptível.
- * - Flutuação suave com amplitude de 8px em ciclo de 5s.
+ * - Gradiente suave de fusão na base com #04050d para garantir acabamento estelar contínuo.
+ * - Animação fluida de 'respiro' (subindo e descendo 5px bem devagar em ciclo infinito).
+ * - Filtro drop-shadow sutil com tom azulado e dourado celestial para integrá-la ao fundo.
  * - Brilhos em formato de cruz de 4 pontas (twinkle) ao redor da menina.
  */
 function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
   const [imageLoaded, setImageLoaded] = useState(true);
 
   return (
-    <motion.div
-      className="relative z-10 mt-8 flex w-full flex-col items-center justify-end overflow-hidden"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{
-        opacity: 1,
-        y: [-6, 2, -6],
-      }}
-      transition={{
-        opacity: { delay: 0.4, duration: 1.2 },
-        y: { duration: 5.0, repeat: Infinity, ease: "easeInOut" },
-      }}
+    <div
+      className="relative z-10 mt-6 flex w-full flex-col items-center justify-end overflow-hidden"
       style={{
         transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 14}px, 0)`,
       }}
@@ -764,22 +755,37 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
         ]}
       />
 
-      {/* Container da imagem com base ajustada e gradiente de fusão */}
+      {/* Container da imagem com animação fluida de 'respiro' (subindo e descendo 5px bem devagar) */}
       {imageLoaded && (
-        <div className="relative flex items-end justify-center">
+        <motion.div
+          className="relative flex items-end justify-center"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{
+            opacity: 1,
+            y: [-5, 5, -5],
+          }}
+          transition={{
+            opacity: { delay: 0.4, duration: 1.2 },
+            y: { duration: 5.8, repeat: Infinity, ease: "easeInOut" },
+          }}
+        >
           <img
             src={CHARACTER_IMAGE_SRC}
             alt="Personagem Gabriela"
-            className="relative z-10 max-h-[38svh] w-auto max-w-[min(90vw,26rem)] object-contain object-bottom drop-shadow-[0_0_32px_rgba(43,48,104,0.85)] sm:max-h-[48svh]"
+            className="relative z-10 max-h-[38svh] w-auto max-w-[min(90vw,26rem)] object-contain object-bottom sm:max-h-[48svh]"
+            style={{
+              filter:
+                "drop-shadow(0 0 14px rgba(96, 145, 255, 0.45)) drop-shadow(0 0 28px rgba(245, 212, 130, 0.35))",
+            }}
             onError={() => setImageLoaded(false)}
           />
 
           {/* Gradiente de fusão perfeito na base para garantir que a parte de baixo nunca seja visível */}
           <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-14 bg-gradient-to-t from-space-black via-space-black/85 to-transparent sm:h-20"
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 bg-gradient-to-t from-space-black via-space-black/90 to-transparent sm:h-24"
             aria-hidden
           />
-        </div>
+        </motion.div>
       )}
 
       {/* Fallback celestial delicado caso a imagem não esteja pronta */}
@@ -788,7 +794,7 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
           <span className="font-script text-3xl text-silver/80">G</span>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
 
