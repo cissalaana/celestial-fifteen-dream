@@ -119,8 +119,9 @@
 
   --star: oklch(1 0 0);
   --silver: oklch(0.929 0.013 255.5);
-  --space-black: #04050d;
-  --nebula-purple: #2b3068;
+  --space-black: #0A0F42;
+  --nebula-purple: #3537B1;
+  --nebula-slate: #3D4069;
   --shadow-celestial: 0 0 2rem color-mix(in oklab, var(--silver) 24%, transparent);
 }
 
@@ -211,17 +212,17 @@
 }
 
 @utility celestial-stage {
-  background-color: #04050d;
+  background-color: #0A0F42;
   background-image:
-    radial-gradient(
-      ellipse 80% 60% at 50% 40%,
-      rgba(43, 48, 104, 0.42) 0%,
-      rgba(43, 48, 104, 0.16) 48%,
-      transparent 80%
-    ),
-    radial-gradient(ellipse 60% 50% at 20% 25%, rgba(43, 48, 104, 0.28) 0%, transparent 70%),
-    radial-gradient(ellipse 55% 45% at 82% 75%, rgba(43, 48, 104, 0.22) 0%, transparent 70%),
-    radial-gradient(circle at 50% 50%, transparent 35%, #04050d 95%);
+    /* Gradiente principal suave transicionando de #3537B1 para #3D4069 */
+    linear-gradient(145deg, rgba(53, 55, 177, 0.40) 0%, rgba(61, 64, 105, 0.46) 100%),
+    /* Pontos adicionais de iluminação suave (radial-gradients) com baixa opacidade */
+    radial-gradient(ellipse 75% 60% at 20% 18%, rgba(53, 55, 177, 0.32) 0%, transparent 68%),
+    radial-gradient(ellipse 65% 55% at 84% 28%, rgba(61, 64, 105, 0.34) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 55% at 50% 68%, rgba(53, 55, 177, 0.25) 0%, transparent 72%),
+    radial-gradient(ellipse 60% 45% at 16% 82%, rgba(61, 64, 105, 0.28) 0%, transparent 68%),
+    /* Vinheta suave para garantir contraste periférico em direção ao tom escuro base #0A0F42 */
+    radial-gradient(circle at 50% 50%, transparent 45%, #0A0F42 98%);
   isolation: isolate;
 }
 
@@ -236,12 +237,12 @@
   border-radius: 9999px;
   background: radial-gradient(
     ellipse at center,
-    rgba(43, 48, 104, 0.52) 0%,
-    rgba(43, 48, 104, 0.22) 48%,
+    rgba(53, 55, 177, 0.35) 0%,
+    rgba(61, 64, 105, 0.20) 48%,
     transparent 80%
   );
   filter: blur(4.5rem);
-  opacity: 0.9;
+  opacity: 0.85;
   pointer-events: none;
 }
 
@@ -250,11 +251,11 @@
   border-radius: 9999px;
   background: radial-gradient(
     ellipse at center,
-    rgba(43, 48, 104, 0.55) 0%,
-    rgba(43, 48, 104, 0.2) 52%,
+    rgba(53, 55, 177, 0.38) 0%,
+    rgba(61, 64, 105, 0.22) 52%,
     transparent 80%
   );
-  filter: blur(4rem);
+  filter: blur(4.5rem);
   pointer-events: none;
 }
 
@@ -262,7 +263,7 @@
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, transparent 40%, #04050d 98%);
+  background: radial-gradient(circle at 50% 50%, transparent 48%, #0A0F42 100%);
   z-index: 15;
 }
 
@@ -282,11 +283,11 @@
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    color-mix(in oklab, var(--cosmic-glow) 48%, transparent) 0%,
-    color-mix(in oklab, var(--night-soft) 30%, transparent) 52%,
+    rgba(53, 55, 177, 0.32) 0%,
+    rgba(61, 64, 105, 0.20) 52%,
     transparent 78%
   );
-  filter: blur(3rem);
+  filter: blur(3.5rem);
 }
 
 @utility character-illustration {

@@ -184,7 +184,15 @@ function Index() {
       {/* Camada 0: Fundo estelar com paralaxe lenta */}
       <CelestialStarfield />
 
-      {/* Camada 1: Vinheta de bordas escuras (#04050d) para contraste */}
+      {/* Pontos adicionais de iluminação suave (glows) espalhados com baixa opacidade nas cores #3537B1 e #3D4069 */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
+        <div className="absolute -left-[12%] top-[10%] size-[38rem] rounded-full bg-[#3537B1]/20 blur-[6.5rem] sm:size-[50rem]" />
+        <div className="absolute -right-[15%] top-[28%] size-[36rem] rounded-full bg-[#3D4069]/24 blur-[6rem] sm:size-[46rem]" />
+        <div className="absolute left-[18%] bottom-[10%] size-[40rem] rounded-full bg-[#3537B1]/18 blur-[7rem] sm:size-[52rem]" />
+        <div className="absolute right-[12%] bottom-[16%] size-[34rem] rounded-full bg-[#3D4069]/20 blur-[5.5rem] sm:size-[42rem]" />
+      </div>
+
+      {/* Camada 1: Vinheta suave em direção ao tom escuro base (#0A0F42) para contraste */}
       <div className="celestial-vignette" aria-hidden />
 
       {/* Áudio ambiente e ruído celestial sutil */}
@@ -699,7 +707,7 @@ function FinalScene({
             duration: 1.0,
           }}
         >
-          <p className="max-w-md text-balance text-center font-label text-[0.68rem] uppercase leading-relaxed tracking-[0.22em] text-silver/85 sm:text-xs">
+          <p className="max-w-md text-balance text-center font-label text-[0.80rem] uppercase leading-6 tracking-[0.22em] text-silver/90 sm:text-[0.92rem] sm:leading-7">
             Confirme a sua presença
             <br />
             para receber o convite oficial
