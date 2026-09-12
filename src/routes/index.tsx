@@ -533,18 +533,12 @@ function DateScene({
         aria-hidden
       />
 
-      {/* Subtítulo no topo com margem de 40px (mb-10) da data */}
+      {/* Subtítulo no topo estático */}
       <motion.p
-        className="mb-10 font-label text-[0.62rem] uppercase tracking-[0.52em] text-silver sm:mb-12 sm:text-xs"
+        className="mb-8 font-label text-[0.62rem] uppercase tracking-[0.52em] text-silver sm:mb-10 sm:text-xs"
         initial={{ opacity: 0, y: 8 }}
-        animate={{
-          opacity: 1,
-          y: [-4, 4, -4],
-        }}
-        transition={{
-          opacity: { delay: 0.6, duration: 1.2 },
-          y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
-        }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 1.0 }}
       >
         Quando as estrelas se alinharem
       </motion.p>
@@ -553,7 +547,7 @@ function DateScene({
         12 de dezembro de 2026
       </h1>
 
-      {/* Container da Data com Rigorosa Escala de 8px e Brilhos de Cruz de 4 Pontas */}
+      {/* Container da Data: leitura de cima para baixo (12 -> dezembro -> 2026) estático */}
       <div className="relative flex flex-col items-center justify-center">
         {/* Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle) ao redor do bloco da data */}
         <SparkleCluster
@@ -567,55 +561,41 @@ function DateScene({
           ]}
         />
 
-        {/* 1. Mês 'Dezembro' no topo com espaçamento de 32px (mb-8) em relação ao número 12 */}
-        <motion.span
-          className="mb-8 font-script text-5xl text-silver drop-shadow-[0_0_22px_rgba(235,238,255,0.75)] sm:text-6xl md:text-7xl"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{
-            opacity: 1,
-            y: [-4, 4, -4],
-          }}
-          transition={{
-            opacity: { delay: 0.8, duration: 1.2 },
-            y: { duration: 3.6, repeat: Infinity, ease: "easeInOut" },
-          }}
-        >
-          Dezembro
-        </motion.span>
-
-        {/* 2. Número '12' centralizado com leading-none para base precisa */}
+        {/* 1. Número '12' no topo - estático */}
         <motion.span
           className="font-display text-[9.5rem] leading-none text-star drop-shadow-[0_0_32px_rgba(255,255,255,0.65)] sm:text-[13rem] md:text-[15rem]"
-          initial={{ opacity: 0, scale: 0.72, filter: "blur(10px)" }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            filter: "blur(0px)",
-            y: [-6, 6, -6],
-          }}
+          initial={{ opacity: 0, scale: 0.75, filter: "blur(10px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{
-            opacity: { delay: 1.0, duration: 1.4 },
-            scale: { delay: 1.0, duration: 1.4 },
-            filter: { delay: 1.0, duration: 1.4 },
-            y: { duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 },
+            delay: 0.6,
+            duration: 1.2,
+            ease: [0.16, 1, 0.3, 1],
           }}
         >
           12
         </motion.span>
 
-        {/* 3. Ano '2026' posicionado exatamente a 8px (mt-2) da base do número 12 */}
+        {/* 2. Mês 'dezembro' no meio - estático */}
         <motion.span
-          className="mt-2 font-display text-2xl tracking-[0.55em] text-star drop-shadow-[0_0_14px_rgba(235,238,255,0.5)] sm:text-3xl md:text-4xl"
-          initial={{ opacity: 0, letterSpacing: "0.9em" }}
-          animate={{
-            opacity: 1,
-            letterSpacing: "0.55em",
-            y: [-3, 3, -3],
-          }}
+          className="mt-3 font-script text-5xl text-silver drop-shadow-[0_0_22px_rgba(235,238,255,0.75)] sm:mt-5 sm:text-6xl md:text-7xl"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{
-            opacity: { delay: 1.3, duration: 1.2 },
-            letterSpacing: { delay: 1.3, duration: 1.2 },
-            y: { duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: 0.4 },
+            delay: 0.9,
+            duration: 1.0,
+          }}
+        >
+          dezembro
+        </motion.span>
+
+        {/* 3. Ano '2026' na base - estático */}
+        <motion.span
+          className="mt-3 font-display text-2xl tracking-[0.55em] text-star drop-shadow-[0_0_14px_rgba(235,238,255,0.5)] sm:mt-5 sm:text-3xl md:text-4xl"
+          initial={{ opacity: 0, letterSpacing: "0.85em" }}
+          animate={{ opacity: 1, letterSpacing: "0.55em" }}
+          transition={{
+            delay: 1.2,
+            duration: 1.0,
           }}
         >
           2026
@@ -661,38 +641,31 @@ function FinalScene({
         aria-hidden
       />
 
-      {/* Bloco de Conteúdo Superior e Intermediário */}
+      {/* Bloco de Conteúdo Superior e Intermediário com Textos Parados (Estáticos) */}
       <div className="relative z-20 flex w-full flex-col items-center">
-        {/* Seção do Nome: 'GABRIELA' centralizado de forma ampla, mantendo no mínimo 48px (my-12) de distância */}
+        {/* Seção do Nome: 'GABRIELA' centralizado de forma ampla - estático */}
         <motion.h1
           id="gabriela-title"
           className="my-10 font-display text-[clamp(3.4rem,11vw,7.8rem)] leading-none tracking-[0.12em] text-star drop-shadow-[0_0_32px_rgba(235,238,255,0.7)] sm:my-12"
-          initial={{ opacity: 0, scale: 0.86 }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            y: [-6, 6, -6],
-          }}
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{
-            opacity: { delay: 0.4, duration: 1.3, ease: [0.16, 1, 0.3, 1] },
-            scale: { delay: 0.4, duration: 1.3, ease: [0.16, 1, 0.3, 1] },
-            y: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+            delay: 0.4,
+            duration: 1.2,
+            ease: [0.16, 1, 0.3, 1],
           }}
         >
           GABRIELA
         </motion.h1>
 
-        {/* Linha de celebração dos 15 Anos */}
+        {/* Linha de celebração dos 15 Anos - estático */}
         <motion.div
           className="flex items-baseline justify-center gap-4 sm:gap-6"
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: 1,
-            y: [-4, 4, -4],
-          }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{
-            opacity: { delay: 0.8, duration: 1.2 },
-            y: { duration: 4.1, repeat: Infinity, ease: "easeInOut", delay: 0.2 },
+            delay: 0.7,
+            duration: 1.0,
           }}
         >
           <span className="h-px w-10 bg-silver sm:w-24" />
@@ -701,34 +674,28 @@ function FinalScene({
           <span className="h-px w-10 bg-silver sm:w-24" />
         </motion.div>
 
-        {/* Frase poética */}
+        {/* Frase poética - estático */}
         <motion.p
           className="mt-8 max-w-2xl font-label text-[0.7rem] uppercase leading-7 tracking-[0.24em] text-silver sm:text-sm sm:leading-8"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{
-            opacity: 1,
-            y: [-3, 3, -3],
-          }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{
-            opacity: { delay: 1.1, duration: 1.2 },
-            y: { duration: 4.4, repeat: Infinity, ease: "easeInOut", delay: 0.4 },
+            delay: 1.0,
+            duration: 1.0,
           }}
         >
           Sob um céu de sonhos e estrelas,
           <br className="hidden sm:block" /> uma noite inesquecível nos espera!
         </motion.p>
 
-        {/* Bloco de Confirmação e Chamada */}
+        {/* Bloco de Confirmação e Chamada - estático */}
         <motion.div
           className="mt-8 flex flex-col items-center gap-4"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{
-            opacity: 1,
-            y: [-4, 4, -4],
-          }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{
-            opacity: { delay: 1.4, duration: 1.2 },
-            y: { duration: 3.9, repeat: Infinity, ease: "easeInOut", delay: 0.3 },
+            delay: 1.3,
+            duration: 1.0,
           }}
         >
           <p className="max-w-lg font-label text-[0.56rem] uppercase leading-5 tracking-[0.2em] text-silver/75 sm:text-[0.66rem]">
