@@ -214,15 +214,14 @@
 @utility celestial-stage {
   background-color: #0A0F42;
   background-image:
-    /* Gradiente principal suave transicionando de #3537B1 para #3D4069 */
-    linear-gradient(145deg, rgba(53, 55, 177, 0.40) 0%, rgba(61, 64, 105, 0.46) 100%),
-    /* Pontos adicionais de iluminação suave (radial-gradients) com baixa opacidade */
-    radial-gradient(ellipse 75% 60% at 20% 18%, rgba(53, 55, 177, 0.32) 0%, transparent 68%),
-    radial-gradient(ellipse 65% 55% at 84% 28%, rgba(61, 64, 105, 0.34) 0%, transparent 70%),
-    radial-gradient(ellipse 70% 55% at 50% 68%, rgba(53, 55, 177, 0.25) 0%, transparent 72%),
-    radial-gradient(ellipse 60% 45% at 16% 82%, rgba(61, 64, 105, 0.28) 0%, transparent 68%),
-    /* Vinheta suave para garantir contraste periférico em direção ao tom escuro base #0A0F42 */
-    radial-gradient(circle at 50% 50%, transparent 45%, #0A0F42 98%);
+    /* Radial-gradient centralizado com raio expandido (120% 100%) e opacidade reduzida, transicionando de forma fluida e imperceptível para #0A0F42 */
+    radial-gradient(
+      ellipse 120% 100% at 50% 50%,
+      rgba(53, 55, 177, 0.25) 0%,
+      rgba(61, 64, 105, 0.16) 48%,
+      rgba(10, 15, 66, 0.65) 75%,
+      #0A0F42 100%
+    );
   isolation: isolate;
 }
 
@@ -237,12 +236,12 @@
   border-radius: 9999px;
   background: radial-gradient(
     ellipse at center,
-    rgba(53, 55, 177, 0.35) 0%,
-    rgba(61, 64, 105, 0.20) 48%,
+    rgba(53, 55, 177, 0.24) 0%,
+    rgba(61, 64, 105, 0.14) 50%,
     transparent 80%
   );
-  filter: blur(4.5rem);
-  opacity: 0.85;
+  filter: blur(5rem);
+  opacity: 0.8;
   pointer-events: none;
 }
 
@@ -251,8 +250,8 @@
   border-radius: 9999px;
   background: radial-gradient(
     ellipse at center,
-    rgba(53, 55, 177, 0.38) 0%,
-    rgba(61, 64, 105, 0.22) 52%,
+    rgba(53, 55, 177, 0.26) 0%,
+    rgba(61, 64, 105, 0.16) 52%,
     transparent 80%
   );
   filter: blur(4.5rem);
@@ -263,7 +262,7 @@
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, transparent 48%, #0A0F42 100%);
+  background: radial-gradient(ellipse 130% 110% at 50% 50%, transparent 60%, rgba(10, 15, 66, 0.75) 100%);
   z-index: 15;
 }
 

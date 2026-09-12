@@ -186,10 +186,9 @@ function Index() {
 
       {/* Pontos adicionais de iluminação suave (glows) espalhados com baixa opacidade nas cores #3537B1 e #3D4069 */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
-        <div className="absolute -left-[12%] top-[10%] size-[38rem] rounded-full bg-[#3537B1]/20 blur-[6.5rem] sm:size-[50rem]" />
-        <div className="absolute -right-[15%] top-[28%] size-[36rem] rounded-full bg-[#3D4069]/24 blur-[6rem] sm:size-[46rem]" />
-        <div className="absolute left-[18%] bottom-[10%] size-[40rem] rounded-full bg-[#3537B1]/18 blur-[7rem] sm:size-[52rem]" />
-        <div className="absolute right-[12%] bottom-[16%] size-[34rem] rounded-full bg-[#3D4069]/20 blur-[5.5rem] sm:size-[42rem]" />
+        <div className="absolute -left-[15%] top-[12%] size-[42rem] rounded-full bg-[#3537B1]/12 blur-[7.5rem] sm:size-[54rem]" />
+        <div className="absolute -right-[15%] top-[25%] size-[38rem] rounded-full bg-[#3D4069]/15 blur-[7rem] sm:size-[48rem]" />
+        <div className="absolute left-[20%] bottom-[8%] size-[44rem] rounded-full bg-[#3537B1]/10 blur-[8rem] sm:size-[56rem]" />
       </div>
 
       {/* Camada 1: Vinheta suave em direção ao tom escuro base (#0A0F42) para contraste */}
@@ -767,7 +766,7 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
         ]}
       />
 
-      {/* Container da imagem com animação fluida de 'respiro' (subindo e descendo 5px bem devagar) */}
+      {/* Container da imagem com animação fluida de 'respiro' e máscara de recorte suave sem caixa escura */}
       {imageLoaded && (
         <motion.div
           className="relative flex items-end justify-center"
@@ -780,6 +779,10 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
             opacity: { delay: 0.4, duration: 1.2 },
             y: { duration: 5.8, repeat: Infinity, ease: "easeInOut" },
           }}
+          style={{
+            WebkitMaskImage: "linear-gradient(to bottom, black 80%, transparent 100%)",
+            maskImage: "linear-gradient(to bottom, black 80%, transparent 100%)",
+          }}
         >
           <img
             src={CHARACTER_IMAGE_SRC}
@@ -787,15 +790,11 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
             className="relative z-10 max-h-[36svh] w-auto max-w-[min(88vw,24rem)] object-contain object-bottom sm:max-h-[46svh]"
             style={{
               filter:
-                "drop-shadow(0 0 18px rgba(96, 145, 255, 0.35)) drop-shadow(0 0 36px rgba(245, 212, 130, 0.22))",
+                "drop-shadow(0 0 16px rgba(96, 145, 255, 0.30)) drop-shadow(0 0 32px rgba(245, 212, 130, 0.18))",
+              WebkitMaskImage: "linear-gradient(to bottom, black 80%, transparent 100%)",
+              maskImage: "linear-gradient(to bottom, black 80%, transparent 100%)",
             }}
             onError={() => setImageLoaded(false)}
-          />
-
-          {/* Gradiente de fusão perfeito na base para garantir acabamento estelar sem corte */}
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 bg-gradient-to-t from-space-black via-space-black/90 to-transparent sm:h-24"
-            aria-hidden
           />
         </motion.div>
       )}
