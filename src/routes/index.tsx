@@ -330,7 +330,7 @@ function GateScene({ mouse }: { mouse: { x: number; y: number } }) {
     >
       {/* Névoa central difusa vazando pela abertura dos portões */}
       <div
-        className="celestial-nebula-mist size-[min(80vw,34rem)] -translate-x-1/2 -translate-y-1/2 opacity-70"
+        className="celestial-nebula-mist size-[min(80vw,34rem)] -translate-x-1/2 -translate-y-1/2 opacity-40"
         style={{
           left: "50%",
           top: "50%",
@@ -402,9 +402,9 @@ function SaveTheDateScene({
         transform: `translate3d(${mouse.x * 22}px, ${mouse.y * 18 - scrollY * 0.25}px, 0)`,
       }}
     >
-      {/* Névoa de iluminação difusa (blur-3xl) em tom azul-púrpura (#2b3068) */}
+      {/* Névoa de iluminação difusa (blur-3xl) em tom azul-púrpura (#2b3068) com opacidade suave */}
       <div
-        className="celestial-nebula-mist size-[min(88vw,42rem)] -translate-x-1/2 -translate-y-1/2 opacity-75"
+        className="celestial-nebula-mist size-[min(88vw,42rem)] -translate-x-1/2 -translate-y-1/2 opacity-40"
         style={{
           left: "50%",
           top: "50%",
@@ -542,9 +542,9 @@ function DateScene({
         transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 18 - scrollY * 0.28}px, 0)`,
       }}
     >
-      {/* Névoa de iluminação difusa (blur-3xl) em tom azul-púrpura (#2b3068) */}
+      {/* Névoa de iluminação difusa (blur-3xl) em tom azul-púrpura (#2b3068) com opacidade suave */}
       <div
-        className="celestial-nebula-mist size-[min(90vw,44rem)] -translate-x-1/2 -translate-y-1/2 opacity-75"
+        className="celestial-nebula-mist size-[min(90vw,44rem)] -translate-x-1/2 -translate-y-1/2 opacity-40"
         style={{
           left: "50%",
           top: "50%",
@@ -641,7 +641,7 @@ function FinalScene({
 }) {
   return (
     <motion.section
-      aria-labelledby="gabriela-title"
+      aria-labelledby="gabi-title"
       className="relative flex w-full max-w-4xl flex-col items-center justify-between text-center pt-2 pb-0"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -650,9 +650,9 @@ function FinalScene({
         transform: `translate3d(${mouse.x * 22}px, ${mouse.y * 16 - scrollY * 0.28}px, 0)`,
       }}
     >
-      {/* Névoa de iluminação difusa (blur-3xl) em tom azul-púrpura (#2b3068) */}
+      {/* Névoa de iluminação difusa (blur-3xl) em tom azul-púrpura (#2b3068) com opacidade suave */}
       <div
-        className="celestial-nebula-mist size-[min(92vw,48rem)] -translate-x-1/2 -translate-y-1/2 opacity-75"
+        className="celestial-nebula-mist size-[min(92vw,48rem)] -translate-x-1/2 -translate-y-1/2 opacity-40"
         style={{
           left: "50%",
           top: "38%",
@@ -663,10 +663,10 @@ function FinalScene({
 
       {/* Bloco de Conteúdo Superior e Intermediário com Textos Parados (Estáticos) */}
       <div className="relative z-20 flex w-full flex-col items-center">
-        {/* Seção do Nome: 'GABRIELA' centralizado de forma ampla - estático */}
+        {/* Seção do Nome: 'GABI' centralizado e aproximado da linha do 15 anos */}
         <motion.h1
-          id="gabriela-title"
-          className="my-10 font-display text-[clamp(3.4rem,11vw,7.8rem)] leading-none tracking-[0.12em] text-star drop-shadow-[0_0_32px_rgba(235,238,255,0.7)] sm:my-12"
+          id="gabi-title"
+          className="mt-8 mb-2 font-display text-[clamp(3.8rem,13vw,8.5rem)] leading-none tracking-[0.15em] text-star drop-shadow-[0_0_32px_rgba(235,238,255,0.7)] sm:mt-10 sm:mb-3"
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{
@@ -675,7 +675,7 @@ function FinalScene({
             ease: [0.16, 1, 0.3, 1],
           }}
         >
-          GABRIELA
+          GABI
         </motion.h1>
 
         {/* Linha de celebração dos 15 Anos - estático com largura balanceada */}
@@ -764,7 +764,7 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
     >
       {/* Névoa de iluminação difusa (blur-3xl) atrás da personagem */}
       <div
-        className="celestial-nebula-mist size-[min(80vw,28rem)] -translate-x-1/2 opacity-75"
+        className="celestial-nebula-mist size-[min(80vw,28rem)] -translate-x-1/2 opacity-40"
         style={{ left: "50%", bottom: "0%" }}
         aria-hidden
       />
