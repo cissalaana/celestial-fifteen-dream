@@ -84,6 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Uma noite de sonhos e estrelas nos espera." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "google", content: "notranslate" },
     ],
     links: [
       {
@@ -107,11 +108,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR" translate="no" className="notranslate">
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="notranslate">
         {children}
         <Scripts />
       </body>
