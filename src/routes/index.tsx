@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
 
 const sceneDuration = [5200, 6500, 6800];
 const WHATSAPP_LINK =
-  "https://web.whatsapp.com/send?phone=5581992895842&text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
+  "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 // Suporte flexível a asset do Lovable ou caminho direto em /assets/
 const CHARACTER_IMAGE_SRC = characterAsset?.url || "/assets/personagem.png";
@@ -127,17 +127,39 @@ function Index() {
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = 0;
-    audio
-      .play()
-      .then(() => {
-        let volume = 0;
-        const fade = window.setInterval(() => {
-          volume = Math.min(0.22, volume + 0.02);
-          audio.volume = volume;
-          if (volume >= 0.22) window.clearInterval(fade);
-        }, 180);
-      })
-      .catch(() => setSoundOn(false));
+
+    const playAudio = () => {
+      audio
+        .play()
+        .then(() => {
+          setSoundOn(true);
+          let volume = audio.volume;
+          const fade = window.setInterval(() => {
+            volume = Math.min(0.28, volume + 0.02);
+            audio.volume = volume;
+            if (volume >= 0.28) window.clearInterval(fade);
+          }, 160);
+        })
+        .catch(() => setSoundOn(false));
+    };
+
+    playAudio();
+
+    const handleFirstInteraction = () => {
+      if (audio.paused) {
+        playAudio();
+      }
+      window.removeEventListener("pointerdown", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+    };
+
+    window.addEventListener("pointerdown", handleFirstInteraction, { once: true });
+    window.addEventListener("touchstart", handleFirstInteraction, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+    };
   }, []);
 
   const toggleSound = () => {
@@ -148,7 +170,7 @@ function Index() {
       setSoundOn(false);
       return;
     }
-    audio.volume = 0.22;
+    audio.volume = 0.28;
     void audio.play();
     setSoundOn(true);
   };
