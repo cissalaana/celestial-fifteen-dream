@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
 
 const sceneDuration = [5200, 6500, 6800];
 const WHATSAPP_LINK =
-  "https://wa.me/5581992895842?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
+  "https://wa.me/5581988079987?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 // Novo vetor/PNG transparente da personagem
 const CHARACTER_IMAGE_SRC = "/assets/personagem.png";
