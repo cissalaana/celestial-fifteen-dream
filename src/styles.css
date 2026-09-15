@@ -214,46 +214,46 @@
 @keyframes nebula-drift-primary {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
-    background-color: rgba(53, 55, 177, 0.25);
-    filter: blur(85px) hue-rotate(0deg);
+    background-color: rgba(53, 55, 177, 0.20);
+    filter: blur(100px) hue-rotate(0deg);
   }
   33% {
     transform: translate3d(35px, -45px, 0) scale(1.12);
-    background-color: rgba(72, 60, 160, 0.23);
-    filter: blur(95px) hue-rotate(18deg);
+    background-color: rgba(72, 60, 160, 0.18);
+    filter: blur(105px) hue-rotate(18deg);
   }
   66% {
     transform: translate3d(-25px, -20px, 0) scale(0.95);
-    background-color: rgba(61, 64, 105, 0.21);
-    filter: blur(88px) hue-rotate(28deg);
+    background-color: rgba(61, 64, 105, 0.16);
+    filter: blur(100px) hue-rotate(28deg);
   }
   100% {
     transform: translate3d(0, 0, 0) scale(1);
-    background-color: rgba(53, 55, 177, 0.25);
-    filter: blur(85px) hue-rotate(0deg);
+    background-color: rgba(53, 55, 177, 0.20);
+    filter: blur(100px) hue-rotate(0deg);
   }
 }
 
 @keyframes nebula-drift-secondary {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
-    background-color: rgba(61, 64, 105, 0.20);
-    filter: blur(95px) hue-rotate(0deg);
+    background-color: rgba(61, 64, 105, 0.18);
+    filter: blur(100px) hue-rotate(0deg);
   }
   40% {
     transform: translate3d(-40px, 35px, 0) scale(1.08);
-    background-color: rgba(53, 55, 177, 0.22);
-    filter: blur(105px) hue-rotate(-22deg);
+    background-color: rgba(53, 55, 177, 0.18);
+    filter: blur(110px) hue-rotate(-22deg);
   }
   75% {
     transform: translate3d(20px, 25px, 0) scale(0.94);
-    background-color: rgba(68, 55, 140, 0.18);
-    filter: blur(90px) hue-rotate(-10deg);
+    background-color: rgba(68, 55, 140, 0.15);
+    filter: blur(100px) hue-rotate(-10deg);
   }
   100% {
     transform: translate3d(0, 0, 0) scale(1);
-    background-color: rgba(61, 64, 105, 0.20);
-    filter: blur(95px) hue-rotate(0deg);
+    background-color: rgba(61, 64, 105, 0.18);
+    filter: blur(100px) hue-rotate(0deg);
   }
 }
 
@@ -266,7 +266,7 @@
   50% {
     transform: translate3d(40px, -30px, 0) scale(1.15);
     background-color: rgba(61, 64, 105, 0.12);
-    filter: blur(110px) hue-rotate(20deg);
+    filter: blur(115px) hue-rotate(20deg);
   }
   100% {
     transform: translate3d(0, 0, 0) scale(0.95);
@@ -311,12 +311,12 @@
   border-radius: 9999px;
   background: radial-gradient(
     ellipse at center,
-    rgba(53, 55, 177, 0.16) 0%,
-    rgba(61, 64, 105, 0.08) 50%,
+    rgba(53, 55, 177, 0.14) 0%,
+    rgba(61, 64, 105, 0.06) 50%,
     transparent 80%
   );
-  filter: blur(5rem);
-  opacity: 0.65;
+  filter: blur(100px);
+  opacity: 0.20;
   pointer-events: none;
 }
 
@@ -325,11 +325,11 @@
   border-radius: 9999px;
   background: radial-gradient(
     ellipse at center,
-    rgba(53, 55, 177, 0.18) 0%,
-    rgba(61, 64, 105, 0.10) 52%,
-    transparent 80%
+    rgba(53, 55, 177, 0.20) 0%,
+    rgba(61, 64, 105, 0.08) 45%,
+    transparent 75%
   );
-  filter: blur(4.5rem);
+  filter: blur(100px);
   pointer-events: none;
 }
 
@@ -357,11 +357,11 @@
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgba(53, 55, 177, 0.32) 0%,
-    rgba(61, 64, 105, 0.20) 52%,
-    transparent 78%
+    rgba(53, 55, 177, 0.20) 0%,
+    rgba(61, 64, 105, 0.10) 50%,
+    transparent 80%
   );
-  filter: blur(3.5rem);
+  filter: blur(100px);
 }
 
 @utility character-illustration {

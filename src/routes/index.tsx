@@ -330,7 +330,7 @@ function GateScene({ mouse }: { mouse: { x: number; y: number } }) {
     >
       {/* Névoa central difusa vazando pela abertura dos portões */}
       <div
-        className="celestial-nebula-mist size-[min(80vw,34rem)] -translate-x-1/2 -translate-y-1/2 opacity-40"
+        className="celestial-nebula-mist size-[min(80vw,34rem)] -translate-x-1/2 -translate-y-1/2 blur-[100px] opacity-20"
         style={{
           left: "50%",
           top: "50%",
@@ -402,9 +402,9 @@ function SaveTheDateScene({
         transform: `translate3d(${mouse.x * 22}px, ${mouse.y * 18 - scrollY * 0.25}px, 0)`,
       }}
     >
-      {/* Névoa de iluminação difusa (blur-3xl) em tom azul-púrpura (#2b3068) com opacidade suave */}
+      {/* Névoa de iluminação difusa etérea com blur-[100px] e opacidade reduzida para eliminar bordas visíveis */}
       <div
-        className="celestial-nebula-mist size-[min(88vw,42rem)] -translate-x-1/2 -translate-y-1/2 opacity-40"
+        className="celestial-nebula-mist size-[min(88vw,42rem)] -translate-x-1/2 -translate-y-1/2 blur-[100px] opacity-20"
         style={{
           left: "50%",
           top: "50%",
@@ -542,9 +542,9 @@ function DateScene({
         transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 18 - scrollY * 0.28}px, 0)`,
       }}
     >
-      {/* Névoa de iluminação difusa (blur-3xl) em tom azul-púrpura (#2b3068) com opacidade suave */}
+      {/* Névoa de iluminação difusa etérea com blur-[100px] e opacidade reduzida para eliminar bordas visíveis */}
       <div
-        className="celestial-nebula-mist size-[min(90vw,44rem)] -translate-x-1/2 -translate-y-1/2 opacity-40"
+        className="celestial-nebula-mist size-[min(90vw,44rem)] -translate-x-1/2 -translate-y-1/2 blur-[100px] opacity-20"
         style={{
           left: "50%",
           top: "50%",
@@ -650,9 +650,9 @@ function FinalScene({
         transform: `translate3d(${mouse.x * 22}px, ${mouse.y * 16 - scrollY * 0.28}px, 0)`,
       }}
     >
-      {/* Névoa de iluminação difusa (blur-3xl) em tom azul-púrpura (#2b3068) com opacidade suave */}
+      {/* Névoa de iluminação difusa etérea com blur-[100px] e opacidade reduzida para eliminar bordas visíveis */}
       <div
-        className="celestial-nebula-mist size-[min(92vw,48rem)] -translate-x-1/2 -translate-y-1/2 opacity-40"
+        className="celestial-nebula-mist size-[min(92vw,48rem)] -translate-x-1/2 -translate-y-1/2 blur-[100px] opacity-20"
         style={{
           left: "50%",
           top: "38%",
@@ -762,9 +762,9 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
         transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 14}px, 0)`,
       }}
     >
-      {/* Névoa de iluminação difusa (blur-3xl) atrás da personagem */}
+      {/* Névoa de iluminação difusa etérea com blur-[100px] e opacidade suave atrás da personagem */}
       <div
-        className="celestial-nebula-mist size-[min(80vw,28rem)] -translate-x-1/2 opacity-40"
+        className="celestial-nebula-mist size-[min(80vw,28rem)] -translate-x-1/2 blur-[100px] opacity-20"
         style={{ left: "50%", bottom: "0%" }}
         aria-hidden
       />
