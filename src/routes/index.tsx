@@ -316,17 +316,31 @@ function Index() {
         </Button>
       )}
 
-      <Button
-        type="button"
-        size="icon"
-        variant="ghost"
-        onClick={toggleSound}
-        aria-label={soundOn ? "Desativar música" : "Ativar música"}
-        title={soundOn ? "Desativar música" : "Ativar música"}
-        className="fixed right-4 top-4 z-40 text-silver/70 hover:bg-silver/10 hover:text-star sm:right-8 sm:top-7"
-      >
-        {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
-      </Button>
+      <div className="fixed right-4 top-4 z-40 flex flex-col items-end gap-2 sm:right-8 sm:top-7">
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          onClick={toggleSound}
+          aria-label={soundOn ? "Desativar música" : "Ativar música"}
+          title={soundOn ? "Desativar música" : "Ativar música"}
+          className={
+            autoplayBlocked
+              ? "animate-pulse text-star hover:bg-silver/10"
+              : "text-silver/70 hover:bg-silver/10 hover:text-star"
+          }
+        >
+          {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
+        </Button>
+        {autoplayBlocked && (
+          <span
+            className="pointer-events-none rounded-full border border-silver/20 bg-[#0a0b1e]/70 px-3 py-1 text-[10px] tracking-widest text-silver/80 backdrop-blur-sm"
+            role="status"
+          >
+            TOQUE PARA ATIVAR A MÚSICA
+          </span>
+        )}
+      </div>
     </main>
   );
 }
