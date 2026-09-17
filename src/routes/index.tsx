@@ -111,6 +111,7 @@ function useScrollParallax() {
 function Index() {
   const [scene, setScene] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const soundOnRef = useRef(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const mouse = useMouseParallax();
@@ -135,23 +136,42 @@ function Index() {
 
     audio.volume = 0.28;
 
-    // Tentativa inicial imediata de autoplay
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          setSoundOn(true);
-        })
-        .catch(() => {
-          // Se o navegador bloquear o autoplay restrito antes de interação,
-          // mantemos soundOn = true (ícone desmutado/ligado) e iniciamos na primeira ação.
-        });
-    }
+    let cancelled = false;
+
+    const tryPlay = () => {
+      if (cancelled || !soundOnRef.current) return;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setAutoplayBlocked(false);
+            // Para de tentar assim que a música começa de verdade.
+            window.clearInterval(retryTimer);
+            window.removeEventListener("pointerdown", handleFirstInteraction);
+          })
+          .catch(() => {
+            // Autoplay com som bloqueado pelo navegador: mostramos o lembrete
+            // e tentamos novamente em intervalos e na primeira interação.
+            setAutoplayBlocked(true);
+          });
+      }
+    };
+
+    // Tentativa imediata + novas tentativas automáticas: alguns navegadores
+    // liberam a reprodução após o carregamento ou ao voltar para a aba.
+    tryPlay();
+    const retryTimer = window.setInterval(tryPlay, 2500);
+    const onLoad = () => tryPlay();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") tryPlay();
+    };
+    window.addEventListener("load", onLoad);
+    document.addEventListener("visibilitychange", onVisible);
 
     const handleFirstInteraction = () => {
       if (soundOnRef.current && audio.paused) {
         audio.volume = 0.28;
-        void audio.play().catch(() => {});
+        tryPlay();
       }
       cleanupListeners();
     };
@@ -169,6 +189,10 @@ function Index() {
     window.addEventListener("keydown", handleFirstInteraction, { once: true, passive: true });
 
     return () => {
+      cancelled = true;
+      window.clearInterval(retryTimer);
+      window.removeEventListener("load", onLoad);
+      document.removeEventListener("visibilitychange", onVisible);
       cleanupListeners();
     };
   }, []);
@@ -292,17 +316,31 @@ function Index() {
         </Button>
       )}
 
-      <Button
-        type="button"
-        size="icon"
-        variant="ghost"
-        onClick={toggleSound}
-        aria-label={soundOn ? "Desativar música" : "Ativar música"}
-        title={soundOn ? "Desativar música" : "Ativar música"}
-        className="fixed right-4 top-4 z-40 text-silver/70 hover:bg-silver/10 hover:text-star sm:right-8 sm:top-7"
-      >
-        {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
-      </Button>
+      <div className="fixed right-4 top-4 z-40 flex flex-col items-end gap-2 sm:right-8 sm:top-7">
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          onClick={toggleSound}
+          aria-label={soundOn ? "Desativar música" : "Ativar música"}
+          title={soundOn ? "Desativar música" : "Ativar música"}
+          className={
+            autoplayBlocked
+              ? "animate-pulse text-star hover:bg-silver/10"
+              : "text-silver/70 hover:bg-silver/10 hover:text-star"
+          }
+        >
+          {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
+        </Button>
+        {autoplayBlocked && (
+          <span
+            className="pointer-events-none rounded-full border border-silver/20 bg-[#0a0b1e]/70 px-3 py-1 text-[10px] tracking-widest text-silver/80 backdrop-blur-sm"
+            role="status"
+          >
+            TOQUE PARA ATIVAR A MÚSICA
+          </span>
+        )}
+      </div>
     </main>
   );
 }
