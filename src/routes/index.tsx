@@ -33,8 +33,9 @@ const sceneDuration = [5200, 6500, 6800];
 const WHATSAPP_LINK =
   "https://wa.me/5581988079987?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
-// Novo vetor/PNG transparente da personagem
-const CHARACTER_IMAGE_SRC = "/assets/personagem.png";
+// Imagem transparente da boneca (sem fundo, totalmente vazada)
+const CHARACTER_IMAGE_SRC = "/assets/A noite de uma estrela (3).png";
+const FALLBACK_CHARACTER_SRC = "/assets/personagem.png";
 
 /**
  * Hook de Mouse Parallax suave com interpolação contínua (lerp)
@@ -110,9 +111,14 @@ function useScrollParallax() {
 function Index() {
   const [scene, setScene] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
+  const soundOnRef = useRef(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const mouse = useMouseParallax();
   const scrollY = useScrollParallax();
+
+  useEffect(() => {
+    soundOnRef.current = soundOn;
+  }, [soundOn]);
 
   useEffect(() => {
     if (scene >= 3) return;
@@ -126,39 +132,44 @@ function Index() {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    audio.volume = 0;
 
-    const playAudio = () => {
-      audio
-        .play()
+    audio.volume = 0.28;
+
+    // Tentativa inicial imediata de autoplay
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
         .then(() => {
           setSoundOn(true);
-          let volume = audio.volume;
-          const fade = window.setInterval(() => {
-            volume = Math.min(0.28, volume + 0.02);
-            audio.volume = volume;
-            if (volume >= 0.28) window.clearInterval(fade);
-          }, 160);
         })
-        .catch(() => setSoundOn(false));
-    };
-
-    playAudio();
+        .catch(() => {
+          // Se o navegador bloquear o autoplay restrito antes de interação,
+          // mantemos soundOn = true (ícone desmutado/ligado) e iniciamos na primeira ação.
+        });
+    }
 
     const handleFirstInteraction = () => {
-      if (audio.paused) {
-        playAudio();
+      if (soundOnRef.current && audio.paused) {
+        audio.volume = 0.28;
+        void audio.play().catch(() => {});
       }
-      window.removeEventListener("pointerdown", handleFirstInteraction);
-      window.removeEventListener("touchstart", handleFirstInteraction);
+      cleanupListeners();
     };
 
-    window.addEventListener("pointerdown", handleFirstInteraction, { once: true });
-    window.addEventListener("touchstart", handleFirstInteraction, { once: true });
-
-    return () => {
+    const cleanupListeners = () => {
       window.removeEventListener("pointerdown", handleFirstInteraction);
       window.removeEventListener("touchstart", handleFirstInteraction);
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("keydown", handleFirstInteraction);
+    };
+
+    window.addEventListener("pointerdown", handleFirstInteraction, { once: true, passive: true });
+    window.addEventListener("touchstart", handleFirstInteraction, { once: true, passive: true });
+    window.addEventListener("click", handleFirstInteraction, { once: true, passive: true });
+    window.addEventListener("keydown", handleFirstInteraction, { once: true, passive: true });
+
+    return () => {
+      cleanupListeners();
     };
   }, []);
 
@@ -167,11 +178,13 @@ function Index() {
     if (!audio) return;
     if (soundOn) {
       audio.pause();
+      soundOnRef.current = false;
       setSoundOn(false);
       return;
     }
     audio.volume = 0.28;
-    void audio.play();
+    void audio.play().catch(() => {});
+    soundOnRef.current = true;
     setSoundOn(true);
   };
 
@@ -208,8 +221,15 @@ function Index() {
       {/* Camada 1: Vinheta suave em direção ao tom escuro base (#080C2A) para contraste periférico */}
       <div className="celestial-vignette" aria-hidden />
 
-      {/* Áudio ambiente e ruído celestial sutil */}
-      <audio ref={audioRef} src="/audio/celestial-ambient.mp3" loop preload="auto" />
+      {/* Áudio ambiente com autoplay e reprodução contínua */}
+      <audio
+        ref={audioRef}
+        src="/audio/celestial-ambient.mp3"
+        autoPlay
+        loop
+        preload="auto"
+        playsInline
+      />
       <div className="celestial-grain pointer-events-none fixed inset-0 z-10" aria-hidden />
 
       {/* Estrela cadente com asset flexível */}
@@ -762,13 +782,6 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
         transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 14}px, 0)`,
       }}
     >
-      {/* Névoa de iluminação difusa etérea com blur-[100px] e opacidade suave atrás da personagem */}
-      <div
-        className="celestial-nebula-mist size-[min(80vw,28rem)] -translate-x-1/2 blur-[100px] opacity-20"
-        style={{ left: "50%", bottom: "0%" }}
-        aria-hidden
-      />
-
       {/* Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle) ao redor da personagem */}
       <SparkleCluster
         sparkles={[
@@ -780,7 +793,7 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
         ]}
       />
 
-      {/* Container da imagem com animação fluida de 'respiro' e máscara de recorte suave sem caixa escura */}
+      {/* Container da imagem com animação fluida de 'respiro', totalmente limpa e vazada sem brilhos ou sombras no fundo */}
       {imageLoaded && (
         <motion.div
           className="relative flex items-end justify-center"
@@ -794,8 +807,8 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
             y: { duration: 5.8, repeat: Infinity, ease: "easeInOut" },
           }}
           style={{
-            WebkitMaskImage: "linear-gradient(to bottom, black 80%, transparent 100%)",
-            maskImage: "linear-gradient(to bottom, black 80%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+            maskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
           }}
         >
           <img
@@ -803,12 +816,16 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
             alt="Personagem Gabriela"
             className="relative z-10 max-h-[36svh] w-auto max-w-[min(88vw,24rem)] object-contain object-bottom sm:max-h-[46svh]"
             style={{
-              filter:
-                "drop-shadow(0 0 16px rgba(96, 145, 255, 0.30)) drop-shadow(0 0 32px rgba(245, 212, 130, 0.18))",
-              WebkitMaskImage: "linear-gradient(to bottom, black 80%, transparent 100%)",
-              maskImage: "linear-gradient(to bottom, black 80%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+              maskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
             }}
-            onError={() => setImageLoaded(false)}
+            onError={(e) => {
+              if (e.currentTarget.src !== window.location.origin + FALLBACK_CHARACTER_SRC) {
+                e.currentTarget.src = FALLBACK_CHARACTER_SRC;
+              } else {
+                setImageLoaded(false);
+              }
+            }}
           />
         </motion.div>
       )}
