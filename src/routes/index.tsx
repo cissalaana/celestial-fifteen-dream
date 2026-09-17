@@ -29,12 +29,12 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const sceneDuration = [3800];
+const sceneDuration = [5200, 6500, 6800];
 const WHATSAPP_LINK =
   "https://wa.me/5581988079987?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 // Imagem transparente da boneca (sem fundo, totalmente vazada)
-const CHARACTER_IMAGE_SRC = "/assets/A noite de uma estrela (3).png";
+const CHARACTER_IMAGE_SRC = "/assets/A noite de uma estrela (1).png";
 const FALLBACK_CHARACTER_SRC = "/assets/personagem.png";
 
 /**
@@ -110,16 +110,21 @@ function useScrollParallax() {
 
 function Index() {
   const [scene, setScene] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
+  const soundOnRef = useRef(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const mouse = useMouseParallax();
   const scrollY = useScrollParallax();
 
   useEffect(() => {
-    if (scene >= 1) return;
+    soundOnRef.current = soundOn;
+  }, [soundOn]);
+
+  useEffect(() => {
+    if (scene >= 3) return;
     const timeout = window.setTimeout(
-      () => setScene(1),
-      sceneDuration[0],
+      () => setScene((current) => current + 1),
+      sceneDuration[scene],
     );
     return () => window.clearTimeout(timeout);
   }, [scene]);
@@ -128,46 +133,59 @@ function Index() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.loop = true;
-    audio.volume = 0.5; // volume suave em 50%
+    audio.volume = 0.28;
 
-    const startAudio = () => {
-      if (!isMuted) {
-        audio.play().catch(() => {});
+    // Tentativa inicial imediata de autoplay
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setSoundOn(true);
+        })
+        .catch(() => {
+          // Se o navegador bloquear o autoplay restrito antes de interação,
+          // mantemos soundOn = true (ícone desmutado/ligado) e iniciamos na primeira ação.
+        });
+    }
+
+    const handleFirstInteraction = () => {
+      if (soundOnRef.current && audio.paused) {
+        audio.volume = 0.28;
+        void audio.play().catch(() => {});
       }
-      // Remova os ouvintes após a primeira interação desbloquear o áudio
-      window.removeEventListener("click", startAudio);
-      window.removeEventListener("touchstart", startAudio);
-      window.removeEventListener("scroll", startAudio);
+      cleanupListeners();
     };
 
-    // Tenta tocar imediatamente
-    audio.play().catch(() => {
-      // Se o navegador bloquear, escuta a primeira interação do usuário
-      window.addEventListener("click", startAudio);
-      window.addEventListener("touchstart", startAudio);
-      window.addEventListener("scroll", startAudio);
-    });
+    const cleanupListeners = () => {
+      window.removeEventListener("pointerdown", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("keydown", handleFirstInteraction);
+    };
+
+    window.addEventListener("pointerdown", handleFirstInteraction, { once: true, passive: true });
+    window.addEventListener("touchstart", handleFirstInteraction, { once: true, passive: true });
+    window.addEventListener("click", handleFirstInteraction, { once: true, passive: true });
+    window.addEventListener("keydown", handleFirstInteraction, { once: true, passive: true });
 
     return () => {
-      window.removeEventListener("click", startAudio);
-      window.removeEventListener("touchstart", startAudio);
-      window.removeEventListener("scroll", startAudio);
+      cleanupListeners();
     };
-  }, [isMuted]);
+  }, []);
 
   const toggleSound = () => {
     const audio = audioRef.current;
     if (!audio) return;
-
-    if (!isMuted) {
+    if (soundOn) {
       audio.pause();
-      setIsMuted(true);
-    } else {
-      audio.volume = 0.5;
-      audio.play().catch(() => {});
-      setIsMuted(false);
+      soundOnRef.current = false;
+      setSoundOn(false);
+      return;
     }
+    audio.volume = 0.28;
+    void audio.play().catch(() => {});
+    soundOnRef.current = true;
+    setSoundOn(true);
   };
 
   const replay = () => {
@@ -217,33 +235,50 @@ function Index() {
       {/* Estrela cadente com asset flexível */}
       <ArcShootingStar mouse={mouse} scrollY={scrollY} />
 
-      {/* Camada de Conteúdo Responsiva Mobile-First (Sem sobreposição) */}
-      <div className="relative z-20 flex min-h-[100svh] w-full flex-col items-center justify-start overflow-y-auto px-4 py-12 sm:px-6 sm:py-16 md:py-20">
+      {/* Camada de Conteúdo com Mouse e Scroll Parallax */}
+      <div className="relative z-20 flex min-h-[100svh] items-center justify-center px-6 py-16 sm:px-8 sm:py-24">
         <AnimatePresence mode="wait">
           {scene === 0 && <GateScene key="gate" mouse={mouse} />}
-          {scene === 1 && (
-            <UnifiedInvitationScene
-              key="unified"
-              mouse={mouse}
-              scrollY={scrollY}
-            />
-          )}
+          {scene === 1 && <SaveTheDateScene key="save" mouse={mouse} scrollY={scrollY} />}
+          {scene === 2 && <DateScene key="date" mouse={mouse} scrollY={scrollY} />}
+          {scene === 3 && <FinalScene key="final" mouse={mouse} scrollY={scrollY} />}
         </AnimatePresence>
       </div>
 
+      {/* Barra de navegação inferior com escala e acessibilidade */}
+      <nav
+        aria-label="Progresso do convite"
+        className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-full border border-silver/10 bg-space-black/60 px-4 py-2 backdrop-blur-md"
+      >
+        {[0, 1, 2, 3].map((step) => (
+          <button
+            key={step}
+            type="button"
+            onClick={() => setScene(step)}
+            aria-label={`Ir para cena ${step + 1}`}
+            aria-current={scene === step ? "step" : undefined}
+            className={`h-1 cursor-pointer rounded-full transition-all duration-500 ${
+              scene === step
+                ? "w-8 bg-silver shadow-[0_0_8px_var(--silver)]"
+                : "w-3 bg-silver/30 hover:bg-silver/70"
+            }`}
+          />
+        ))}
+      </nav>
+
       {/* Botões de controle de topo */}
-      {scene === 0 && (
+      {scene < 3 && (
         <Button
           type="button"
           variant="ghost"
-          onClick={() => setScene(1)}
+          onClick={() => setScene(3)}
           className="fixed right-16 top-4 z-40 font-label text-[0.6rem] uppercase tracking-[0.2em] text-silver/70 hover:bg-silver/10 hover:text-star sm:right-20 sm:top-7"
         >
           Pular <ChevronRight className="ml-1 size-3.5" />
         </Button>
       )}
 
-      {scene === 1 && (
+      {scene === 3 && (
         <Button
           type="button"
           size="icon"
@@ -262,11 +297,11 @@ function Index() {
         size="icon"
         variant="ghost"
         onClick={toggleSound}
-        aria-label={isMuted ? "Ativar música" : "Desativar música"}
-        title={isMuted ? "Ativar música" : "Desativar música"}
+        aria-label={soundOn ? "Desativar música" : "Ativar música"}
+        title={soundOn ? "Desativar música" : "Ativar música"}
         className="fixed right-4 top-4 z-40 text-silver/70 hover:bg-silver/10 hover:text-star sm:right-8 sm:top-7"
       >
-        {isMuted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+        {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
       </Button>
     </main>
   );
@@ -364,223 +399,447 @@ function GateScene({ mouse }: { mouse: { x: number; y: number } }) {
 }
 
 /**
- * Cena Principal: Convite Celestial Unificado Responsivo (Mobile-First)
- * - Ordem vertical rigorosa na escala de 8px:
- *   1. Estrela Cadente no topo
- *   2. Frase "UMA NOITE ESPECIAL SE APROXIMA" e "Save The Date"
- *   3. Bloco da Data: "Dezembro" no topo, "12" centralizado grande e "2026" logo abaixo (com gap-2 / 8px)
- *   4. Ilustração da Personagem (max-w-[220px] centralizada) com Glow Halo difuso e Antigravity
- *   5. Nome "GABRIELA 15 ANOS" perfeitamente alinhado e centralizado
- *   6. Botão "CONFIRMAR PRESENÇA"
+ * Cena 1: Save The Date
  */
-function UnifiedInvitationScene({
+function SaveTheDateScene({
   mouse,
   scrollY,
 }: {
   mouse: { x: number; y: number };
   scrollY: number;
 }) {
-  const [imageLoaded, setImageLoaded] = useState(true);
+  const particles = Array.from({ length: 18 });
 
   return (
     <motion.section
-      aria-label="Convite oficial Gabriela 15 Anos"
-      className="relative z-20 flex w-full max-w-xl md:max-w-2xl flex-col items-center justify-center gap-6 sm:gap-8 text-center"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      aria-labelledby="save-title"
+      className="relative flex flex-col items-center text-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, scale: 1.06, filter: "blur(8px)" }}
+      transition={{ duration: 1.6 }}
       style={{
-        transform: `translate3d(${mouse.x * 10}px, ${mouse.y * 8 - scrollY * 0.12}px, 0)`,
+        transform: `translate3d(${mouse.x * 22}px, ${mouse.y * 18 - scrollY * 0.25}px, 0)`,
       }}
     >
-      {/* 1. Estrela Cadente no topo */}
-      <motion.div
-        className="relative flex w-full max-w-[240px] sm:max-w-[300px] items-center justify-center -mt-2 sm:-mt-4"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.2, duration: 1.0 }}
+      {/* Névoa de iluminação difusa etérea com blur-[100px] e opacidade reduzida para eliminar bordas visíveis */}
+      <div
+        className="celestial-nebula-mist size-[min(88vw,42rem)] -translate-x-1/2 -translate-y-1/2 blur-[100px] opacity-20"
+        style={{
+          left: "50%",
+          top: "50%",
+          transform: `translate(-50%, -50%) translate3d(${mouse.x * 12}px, ${mouse.y * 12}px, 0)`,
+        }}
+        aria-hidden
+      />
+
+      {/* Partículas orgânicas dispersas */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 size-[min(80vw,32rem)] -translate-x-1/2 -translate-y-1/2"
         aria-hidden
       >
-        <img
-          src="/assets/estrela-cadente.png"
-          alt=""
-          className="shooting-star-asset h-auto w-full object-contain"
-          onError={(event) => {
-            event.currentTarget.style.display = "none";
-          }}
-        />
-      </motion.div>
-
-      {/* 2. Frase 'UMA NOITE ESPECIAL SE APROXIMA' e 'Save The Date' */}
-      <div className="flex flex-col items-center gap-2 sm:gap-3">
-        <motion.p
-          className="font-label text-[0.65rem] uppercase tracking-[0.45em] text-silver/90 sm:text-xs"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-        >
-          Uma noite especial se aproxima
-        </motion.p>
-        <motion.h2
-          id="save-date-heading"
-          className="font-script text-5xl text-silver drop-shadow-[0_0_22px_var(--silver)] sm:text-7xl md:text-8xl"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.45, duration: 1.0 }}
-        >
-          Save The Date
-        </motion.h2>
-        <motion.div
-          className="mt-1 h-px w-28 bg-gradient-to-r from-transparent via-silver/70 to-transparent sm:w-44"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-        />
-      </div>
-
-      {/* 3. Bloco da Data: 'Dezembro' no topo, '12' centralizado grande e '2026' logo abaixo (com gap-2 / 8px de distância interna) */}
-      <motion.div
-        className="relative flex flex-col items-center justify-center gap-2 text-center"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 1.0 }}
-      >
-        <SparkleCluster
-          sparkles={[
-            { top: "-15%", left: "-18%", size: 20, delay: 0.1, duration: 3.2, floatAmplitude: 6 },
-            { top: "15%", right: "-20%", size: 18, delay: 0.6, duration: 3.6, floatAmplitude: 8 },
-            { bottom: "-10%", left: "-14%", size: 22, delay: 1.2, duration: 3.4, floatAmplitude: 7 },
-            { bottom: "-8%", right: "-12%", size: 16, delay: 1.8, duration: 4.0, floatAmplitude: 6 },
-          ]}
-        />
-        <span className="font-script text-3xl text-silver drop-shadow-[0_0_16px_rgba(235,238,255,0.75)] sm:text-4xl md:text-5xl">
-          Dezembro
-        </span>
-        <span className="font-display text-[7.5rem] leading-[0.78] text-star drop-shadow-[0_0_32px_rgba(255,255,255,0.65)] sm:text-[10rem] md:text-[11.5rem]">
-          12
-        </span>
-        <span className="font-display text-xl tracking-[0.52em] text-star drop-shadow-[0_0_14px_rgba(235,238,255,0.5)] sm:text-2xl md:text-3xl">
-          2026
-        </span>
-      </motion.div>
-
-      {/* 4. Ilustração da Personagem (max-w-[220px] centralizada) com névoa luminosa etérea e difusa */}
-      <div className="relative flex w-full flex-col items-center justify-center my-1 sm:my-2">
-        {/* Iluminação central etérea: névoa luminosa azul suave sem bordas rígidas */}
-        <div
-          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[min(85vw,26rem)] rounded-full bg-blue-500/20 blur-[100px] opacity-20"
-          aria-hidden
-        />
-
-        {/* Brilhos twinkle sutis ao redor da boneca */}
-        <SparkleCluster
-          sparkles={[
-            { top: "6%", left: "14%", size: 20, delay: 0.1, duration: 3.2, floatAmplitude: 6 },
-            { top: "20%", right: "12%", size: 18, delay: 0.7, duration: 3.6, floatAmplitude: 8 },
-            { top: "45%", left: "10%", size: 18, delay: 1.3, duration: 3.4, floatAmplitude: 6 },
-            { top: "35%", right: "15%", size: 16, delay: 1.9, duration: 4.0, floatAmplitude: 7 },
-            { top: "2%", right: "22%", size: 14, delay: 0.4, duration: 2.8, floatAmplitude: 5 },
-          ]}
-        />
-
-        {/* Boneca com animação Antigravity suave e fundo vazado */}
-        {imageLoaded && (
-          <motion.div
-            className="relative flex items-end justify-center"
-            animate={{ y: [-5, 5, -5] }}
-            transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              WebkitMaskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
-              maskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+        {particles.map((_, index) => (
+          <motion.span
+            key={index}
+            className="absolute left-1/2 top-1/2 size-1 rounded-full bg-star shadow-celestial"
+            initial={{ x: 0, y: 0, opacity: 0 }}
+            animate={{
+              x: Math.cos(index * 0.95) * (85 + (index % 5) * 24),
+              y: [
+                Math.sin(index * 0.95) * (50 + (index % 6) * 18),
+                Math.sin(index * 0.95) * (50 + (index % 6) * 18) - 10,
+                Math.sin(index * 0.95) * (50 + (index % 6) * 18),
+              ],
+              opacity: [0, 1, 0.35],
+              scale: [0.4, 1.3, 0.7],
             }}
-          >
-            <img
-              src={CHARACTER_IMAGE_SRC}
-              alt="Ilustração da aniversariante Gabriela"
-              className="relative z-10 w-full max-w-[190px] sm:max-w-[220px] object-contain object-bottom"
-              onError={(e) => {
-                if (e.currentTarget.src !== window.location.origin + FALLBACK_CHARACTER_SRC) {
-                  e.currentTarget.src = FALLBACK_CHARACTER_SRC;
-                } else {
-                  setImageLoaded(false);
-                }
-              }}
-            />
-          </motion.div>
-        )}
-
-        {/* Fallback caso a imagem não carregue */}
-        {!imageLoaded && (
-          <div className="relative z-10 mb-4 flex size-28 items-center justify-center rounded-full border border-silver/20 bg-silver/5 shadow-celestial">
-            <span className="font-script text-3xl text-silver/80">G</span>
-          </div>
-        )}
+            transition={{
+              x: { duration: 2.2, delay: index * 0.05, ease: "easeOut" },
+              y: {
+                duration: 2.8 + (index % 4) * 0.6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              },
+              opacity: { duration: 2.2, delay: index * 0.05 },
+              scale: { duration: 2.2, delay: index * 0.05 },
+            }}
+          />
+        ))}
       </div>
 
-      {/* 5. Nome 'GABRIELA 15 ANOS' perfeitamente alinhado e centralizado */}
-      <div className="flex w-full flex-col items-center gap-3">
-        <motion.h1
-          id="gabriela-title"
-          className="font-display text-[clamp(3.4rem,11vw,6.5rem)] leading-none tracking-[0.14em] text-star drop-shadow-[0_0_32px_rgba(235,238,255,0.7)]"
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.85, duration: 1.0 }}
+      {/* Órbita de partículas com rotação celestial */}
+      <div
+        className="particle-orbit pointer-events-none absolute left-1/2 top-1/2 size-[min(92vw,38rem)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-silver/15"
+        aria-hidden
+      >
+        {Array.from({ length: 20 }).map((_, index) => (
+          <span
+            key={index}
+            className="absolute left-1/2 top-1/2 size-1 rounded-full bg-silver shadow-celestial"
+            style={{ transform: `rotate(${index * 18}deg) translateX(min(46vw,19rem))` }}
+          />
+        ))}
+      </div>
+
+      {/* Brilhos em formato de cruz de 4 pontas */}
+      <SparkleCluster
+        sparkles={[
+          { top: "-10%", left: "15%", size: 22, delay: 0.2, duration: 3.2, floatAmplitude: 8 },
+          { top: "15%", right: "12%", size: 18, delay: 0.8, duration: 3.6, floatAmplitude: 10 },
+          { bottom: "8%", left: "18%", size: 20, delay: 1.4, duration: 3.4, floatAmplitude: 7 },
+          { bottom: "-12%", right: "20%", size: 24, delay: 2.0, duration: 4.0, floatAmplitude: 9 },
+        ]}
+      />
+
+      {/* Subtítulo: flutuação com amplitude de 4px em 4.2s */}
+      <motion.p
+        className="font-label text-[0.62rem] uppercase tracking-[0.52em] text-silver sm:text-xs"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{
+          opacity: 1,
+          y: [-4, 4, -4],
+        }}
+        transition={{
+          opacity: { delay: 0.5, duration: 1.2 },
+          y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
+        }}
+      >
+        Reserve esta noite
+      </motion.p>
+
+      {/* Título: flutuação com amplitude de 6px em 3.5s */}
+      <motion.h1
+        id="save-title"
+        className="mt-8 font-script text-6xl text-silver drop-shadow-[0_0_24px_rgba(235,238,255,0.7)] sm:text-8xl md:text-9xl"
+        initial={{ opacity: 0, scale: 0.82 }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          y: [-6, 6, -6],
+        }}
+        transition={{
+          opacity: { delay: 0.8, duration: 1.6, ease: [0.16, 1, 0.3, 1] },
+          scale: { delay: 0.8, duration: 1.6, ease: [0.16, 1, 0.3, 1] },
+          y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 },
+        }}
+      >
+        Save The Date
+      </motion.h1>
+
+      <motion.div
+        className="mt-10 h-px w-40 bg-gradient-to-r from-transparent via-silver to-transparent sm:w-64"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ delay: 1.4, duration: 1.2 }}
+      />
+    </motion.section>
+  );
+}
+
+/**
+ * Cena 2: Seção da Data (Reestruturação Rigorosa na Escala de 8px)
+ * - Mês 'Dezembro' no topo com espaçamento de 32px (mb-8) em relação ao número '12'.
+ * - Ano '2026' posicionado exatamente a 8px (mt-2) da base do número 12.
+ * - Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle) ao redor da data.
+ * - Névoa difusa (blur-3xl) em tom azul-púrpura (#2b3068).
+ */
+function DateScene({
+  mouse,
+  scrollY,
+}: {
+  mouse: { x: number; y: number };
+  scrollY: number;
+}) {
+  return (
+    <motion.section
+      aria-labelledby="date-title"
+      className="relative flex flex-col items-center text-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, y: -24 }}
+      transition={{ duration: 1.6 }}
+      style={{
+        transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 18 - scrollY * 0.28}px, 0)`,
+      }}
+    >
+      {/* Névoa de iluminação difusa etérea com blur-[100px] e opacidade reduzida para eliminar bordas visíveis */}
+      <div
+        className="celestial-nebula-mist size-[min(90vw,44rem)] -translate-x-1/2 -translate-y-1/2 blur-[100px] opacity-20"
+        style={{
+          left: "50%",
+          top: "50%",
+          transform: `translate(-50%, -50%) translate3d(${mouse.x * 14}px, ${mouse.y * 14}px, 0)`,
+        }}
+        aria-hidden
+      />
+
+      {/* Subtítulo no topo estático */}
+      <motion.p
+        className="mb-8 font-label text-[0.62rem] uppercase tracking-[0.52em] text-silver sm:mb-10 sm:text-xs"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 1.0 }}
+      >
+        Quando as estrelas se alinharem
+      </motion.p>
+
+      <h1 id="date-title" className="sr-only">
+        12 de dezembro de 2026
+      </h1>
+
+      {/* Container da Data: leitura de cima para baixo (12 -> dezembro -> 2026) estático */}
+      <div className="relative flex flex-col items-center justify-center">
+        {/* Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle) ao redor do bloco da data */}
+        <SparkleCluster
+          sparkles={[
+            { top: "-18%", left: "-10%", size: 24, delay: 0.1, duration: 3.2, floatAmplitude: 8 },
+            { top: "6%", right: "-16%", size: 20, delay: 0.6, duration: 3.6, floatAmplitude: 10 },
+            { bottom: "16%", left: "-14%", size: 26, delay: 1.2, duration: 3.4, floatAmplitude: 9 },
+            { bottom: "-12%", right: "-8%", size: 22, delay: 1.8, duration: 4.0, floatAmplitude: 7 },
+            { top: "42%", left: "-22%", size: 16, delay: 0.4, duration: 2.8, floatAmplitude: 6 },
+            { top: "35%", right: "-20%", size: 18, delay: 1.5, duration: 3.5, floatAmplitude: 8 },
+          ]}
+        />
+
+        {/* 1. Número '12' no topo - estático */}
+        <motion.span
+          className="font-display text-[9.5rem] leading-none text-star drop-shadow-[0_0_32px_rgba(255,255,255,0.65)] sm:text-[13rem] md:text-[15rem]"
+          initial={{ opacity: 0, scale: 0.75, filter: "blur(10px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          transition={{
+            delay: 0.6,
+            duration: 1.2,
+            ease: [0.16, 1, 0.3, 1],
+          }}
         >
-          GABRIELA
+          12
+        </motion.span>
+
+        {/* 2. Mês 'dezembro' no meio - estático */}
+        <motion.span
+          className="mt-3 font-script text-5xl text-silver drop-shadow-[0_0_22px_rgba(235,238,255,0.75)] sm:mt-5 sm:text-6xl md:text-7xl"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.9,
+            duration: 1.0,
+          }}
+        >
+          dezembro
+        </motion.span>
+
+        {/* 3. Ano '2026' na base - estático */}
+        <motion.span
+          className="mt-3 font-display text-2xl tracking-[0.55em] text-star drop-shadow-[0_0_14px_rgba(235,238,255,0.5)] sm:mt-5 sm:text-3xl md:text-4xl"
+          initial={{ opacity: 0, letterSpacing: "0.85em" }}
+          animate={{ opacity: 1, letterSpacing: "0.55em" }}
+          transition={{
+            delay: 1.2,
+            duration: 1.0,
+          }}
+        >
+          2026
+        </motion.span>
+      </div>
+    </motion.section>
+  );
+}
+
+/**
+ * Cena Final: GABRIELA, Personagem, 15 Anos e Confirmação
+ * - Personagem com flutuação de amplitude de 12px em 5s e proporção flexível.
+ * - Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle).
+ * - Seção do Nome: 'GABRIELA' centralizado de forma ampla com no mínimo 48px (my-12) de distância dos blocos adjacentes.
+ * - Flutuação assíncrona com frequências distintas para cada elemento.
+ */
+function FinalScene({
+  mouse,
+  scrollY,
+}: {
+  mouse: { x: number; y: number };
+  scrollY: number;
+}) {
+  return (
+    <motion.section
+      aria-labelledby="gabi-title"
+      className="relative flex w-full max-w-4xl flex-col items-center justify-between text-center pt-2 pb-0"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.8 }}
+      style={{
+        transform: `translate3d(${mouse.x * 22}px, ${mouse.y * 16 - scrollY * 0.28}px, 0)`,
+      }}
+    >
+      {/* Névoa de iluminação difusa etérea com blur-[100px] e opacidade reduzida para eliminar bordas visíveis */}
+      <div
+        className="celestial-nebula-mist size-[min(92vw,48rem)] -translate-x-1/2 -translate-y-1/2 blur-[100px] opacity-20"
+        style={{
+          left: "50%",
+          top: "38%",
+          transform: `translate(-50%, -50%) translate3d(${mouse.x * 12}px, ${mouse.y * 12}px, 0)`,
+        }}
+        aria-hidden
+      />
+
+      {/* Bloco de Conteúdo Superior e Intermediário com Textos Parados (Estáticos) */}
+      <div className="relative z-20 flex w-full flex-col items-center">
+        {/* Seção do Nome: 'GABI' centralizado e aproximado da linha do 15 anos */}
+        <motion.h1
+          id="gabi-title"
+          className="mt-8 mb-2 font-display text-[clamp(3.8rem,13vw,8.5rem)] leading-none tracking-[0.15em] text-star drop-shadow-[0_0_32px_rgba(235,238,255,0.7)] sm:mt-10 sm:mb-3"
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            delay: 0.4,
+            duration: 1.2,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+        >
+          GABI
         </motion.h1>
 
-        {/* Linha de celebração dos 15 Anos */}
+        {/* Linha de celebração dos 15 Anos - estático com largura balanceada */}
         <motion.div
-          className="flex w-full max-w-[17rem] sm:max-w-[22rem] items-center justify-center gap-3 sm:gap-4"
-          initial={{ opacity: 0, y: 10 }}
+          className="flex w-full max-w-[19rem] items-center justify-center gap-3 sm:max-w-[27rem] sm:gap-5"
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.95, duration: 0.9 }}
+          transition={{
+            delay: 0.7,
+            duration: 1.0,
+          }}
         >
           <span className="h-px flex-1 bg-silver/75" />
-          <div className="flex items-baseline gap-3 sm:gap-4">
-            <span className="font-script text-5xl leading-none text-silver sm:text-6xl">15</span>
+          <div className="flex items-baseline gap-3 sm:gap-5">
+            <span className="font-script text-6xl leading-none text-silver sm:text-7xl">15</span>
             <YearsWord />
           </div>
           <span className="h-px flex-1 bg-silver/75" />
         </motion.div>
 
-        {/* Frase poética */}
+        {/* Frase poética - estático */}
         <motion.p
-          className="mt-2 max-w-md font-label text-[0.68rem] uppercase leading-6 tracking-[0.22em] text-silver sm:text-xs sm:leading-7"
-          initial={{ opacity: 0, y: 10 }}
+          className="mt-8 max-w-2xl font-label text-[0.7rem] uppercase leading-7 tracking-[0.24em] text-silver sm:text-sm sm:leading-8"
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.05, duration: 0.9 }}
+          transition={{
+            delay: 1.0,
+            duration: 1.0,
+          }}
         >
           Sob um céu de sonhos e estrelas,
           <br className="hidden sm:block" /> uma noite inesquecível nos espera!
         </motion.p>
+
+        {/* Bloco de Confirmação e Chamada - com a mesma largura da linha do 15 anos e frase balanceada sem palavra órfã */}
+        <motion.div
+          className="mt-10 flex w-full flex-col items-center gap-6 sm:mt-14 sm:gap-8"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 1.3,
+            duration: 1.0,
+          }}
+        >
+          <p className="max-w-md text-balance text-center font-label text-[0.80rem] uppercase leading-6 tracking-[0.22em] text-silver/90 sm:text-[0.92rem] sm:leading-7">
+            Confirme a sua presença
+            <br />
+            para receber o convite oficial
+          </p>
+          <Button
+            asChild
+            variant="celestial"
+            size="celestial"
+            className="h-14 w-full max-w-[19rem] justify-center px-4 text-xs font-semibold tracking-[0.22em] shadow-[0_0_24px_rgba(235,238,255,0.25)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_36px_rgba(255,255,255,0.45)] sm:h-16 sm:max-w-[27rem] sm:text-sm sm:tracking-[0.26em]"
+          >
+            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
+              Confirmar presença
+            </a>
+          </Button>
+        </motion.div>
       </div>
 
-      {/* 6. Botão 'CONFIRMAR PRESENÇA' */}
-      <motion.div
-        className="flex w-full flex-col items-center gap-4 sm:gap-6 pt-2 pb-6"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.15, duration: 0.9 }}
-      >
-        <p className="max-w-md text-balance text-center font-label text-[0.78rem] uppercase leading-6 tracking-[0.2em] text-silver/90 sm:text-[0.88rem] sm:leading-7">
-          Confirme a sua presença
-          <br />
-          para receber o convite oficial
-        </p>
-        <Button
-          asChild
-          variant="celestial"
-          size="celestial"
-          className="h-13 w-full max-w-[17rem] justify-center px-4 text-xs font-semibold tracking-[0.22em] shadow-[0_0_24px_rgba(235,238,255,0.25)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_36px_rgba(255,255,255,0.45)] sm:h-15 sm:max-w-[22rem] sm:text-sm sm:tracking-[0.26em]"
-        >
-          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
-            Confirmar presença
-          </a>
-        </Button>
-      </motion.div>
+      {/* Personagem posicionada na parte de baixo, ocultando qualquer corte inferior */}
+      <FloatingCharacter mouse={mouse} />
     </motion.section>
+  );
+}
+
+/**
+ * Personagem posicionada na parte de baixo com Efeito Antigravity
+ * - A imagem fica assentada na parte inferior (object-bottom), sem deixar a base visível.
+ * - Gradiente suave de fusão na base com #04050d para garantir acabamento estelar contínuo.
+ * - Animação fluida de 'respiro' (subindo e descendo 5px bem devagar em ciclo infinito).
+ * - Filtro drop-shadow sutil com tom azulado e dourado celestial para integrá-la ao fundo.
+ * - Brilhos em formato de cruz de 4 pontas (twinkle) ao redor da menina.
+ */
+function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
+  const [imageLoaded, setImageLoaded] = useState(true);
+
+  return (
+    <div
+      className="relative z-10 mt-14 flex w-full flex-col items-center justify-end sm:mt-20 md:mt-24"
+      style={{
+        transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 14}px, 0)`,
+      }}
+    >
+      {/* Névoa de Luz Traseira (Glow Halo): mancha translúcida e etérea sem borda visível */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full bg-blue-500 opacity-20 blur-[90px] pointer-events-none" />
+
+      {/* Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle) ao redor da personagem */}
+      <SparkleCluster
+        sparkles={[
+          { top: "6%", left: "14%", size: 24, delay: 0.1, duration: 3.2, floatAmplitude: 8 },
+          { top: "20%", right: "12%", size: 20, delay: 0.7, duration: 3.6, floatAmplitude: 10 },
+          { top: "45%", left: "10%", size: 22, delay: 1.3, duration: 3.4, floatAmplitude: 8 },
+          { top: "35%", right: "15%", size: 18, delay: 1.9, duration: 4.0, floatAmplitude: 7 },
+          { top: "2%", right: "22%", size: 16, delay: 0.4, duration: 2.8, floatAmplitude: 6 },
+        ]}
+      />
+
+      {/* Container da imagem com animação fluida de 'respiro', totalmente limpa e vazada sem brilhos ou sombras no fundo */}
+      {imageLoaded && (
+        <motion.div
+          className="relative flex items-end justify-center"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{
+            opacity: 1,
+            y: [-5, 5, -5],
+          }}
+          transition={{
+            opacity: { delay: 0.4, duration: 1.2 },
+            y: { duration: 5.8, repeat: Infinity, ease: "easeInOut" },
+          }}
+          style={{
+            WebkitMaskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+            maskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+          }}
+        >
+          <img
+            src={CHARACTER_IMAGE_SRC}
+            alt="Personagem Gabriela"
+            className="relative z-10 max-h-[36svh] w-auto max-w-[min(88vw,24rem)] object-contain object-bottom sm:max-h-[46svh]"
+            style={{
+              WebkitMaskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+              maskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+            }}
+            onError={(e) => {
+              if (e.currentTarget.src !== window.location.origin + FALLBACK_CHARACTER_SRC) {
+                e.currentTarget.src = FALLBACK_CHARACTER_SRC;
+              } else {
+                setImageLoaded(false);
+              }
+            }}
+          />
+        </motion.div>
+      )}
+
+      {/* Fallback celestial delicado caso a imagem não esteja pronta */}
+      {!imageLoaded && (
+        <div className="relative z-10 mb-4 flex size-32 items-center justify-center rounded-full border border-silver/20 bg-silver/5 shadow-celestial">
+          <span className="font-script text-3xl text-silver/80">G</span>
+        </div>
+      )}
+    </div>
   );
 }
 
