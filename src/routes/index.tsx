@@ -34,7 +34,7 @@ const WHATSAPP_LINK =
   "https://wa.me/5581988079987?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 // Imagem transparente da boneca (sem fundo, totalmente vazada)
-const CHARACTER_IMAGE_SRC = "/assets/A noite de uma estrela (1).png";
+const CHARACTER_IMAGE_SRC = "/assets/A noite de uma estrela (3).png";
 const FALLBACK_CHARACTER_SRC = "/assets/personagem.png";
 
 /**
@@ -465,10 +465,8 @@ function UnifiedInvitationScene({
         </span>
       </motion.div>
 
-      {/* 4. Ilustração da Personagem (max-w-[220px] centralizada) com Glow Halo difuso */}
+      {/* 4. Ilustração da Personagem (max-w-[220px] centralizada) com fundo limpo e transparente */}
       <div className="relative flex w-full flex-col items-center justify-center my-1 sm:my-2">
-        {/* Glow Halo difuso e etéreo atrás da boneca */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] sm:w-[450px] sm:h-[450px] rounded-full bg-blue-500 opacity-20 blur-[80px] sm:blur-[90px] pointer-events-none" />
 
         {/* Brilhos twinkle sutis ao redor da boneca */}
         <SparkleCluster
