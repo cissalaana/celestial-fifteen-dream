@@ -109,9 +109,9 @@ function useScrollParallax() {
 }
 
 function Index() {
+  const [hasStarted, setHasStarted] = useState(false);
   const [scene, setScene] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
-  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const soundOnRef = useRef(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const mouse = useMouseParallax();
@@ -122,80 +122,26 @@ function Index() {
   }, [soundOn]);
 
   useEffect(() => {
+    if (!hasStarted) return;
     if (scene >= 3) return;
     const timeout = window.setTimeout(
       () => setScene((current) => current + 1),
       sceneDuration[scene],
     );
     return () => window.clearTimeout(timeout);
-  }, [scene]);
+  }, [hasStarted, scene]);
 
-  useEffect(() => {
+  const handleStart = () => {
     const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.volume = 0.28;
-
-    let cancelled = false;
-
-    const tryPlay = () => {
-      if (cancelled || !soundOnRef.current) return;
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setAutoplayBlocked(false);
-            // Para de tentar assim que a música começa de verdade.
-            window.clearInterval(retryTimer);
-            window.removeEventListener("pointerdown", handleFirstInteraction);
-          })
-          .catch(() => {
-            // Autoplay com som bloqueado pelo navegador: mostramos o lembrete
-            // e tentamos novamente em intervalos e na primeira interação.
-            setAutoplayBlocked(true);
-          });
-      }
-    };
-
-    // Tentativa imediata + novas tentativas automáticas: alguns navegadores
-    // liberam a reprodução após o carregamento ou ao voltar para a aba.
-    tryPlay();
-    const retryTimer = window.setInterval(tryPlay, 2500);
-    const onLoad = () => tryPlay();
-    const onVisible = () => {
-      if (document.visibilityState === "visible") tryPlay();
-    };
-    window.addEventListener("load", onLoad);
-    document.addEventListener("visibilitychange", onVisible);
-
-    const handleFirstInteraction = () => {
-      if (soundOnRef.current && audio.paused) {
-        audio.volume = 0.28;
-        tryPlay();
-      }
-      cleanupListeners();
-    };
-
-    const cleanupListeners = () => {
-      window.removeEventListener("pointerdown", handleFirstInteraction);
-      window.removeEventListener("touchstart", handleFirstInteraction);
-      window.removeEventListener("click", handleFirstInteraction);
-      window.removeEventListener("keydown", handleFirstInteraction);
-    };
-
-    window.addEventListener("pointerdown", handleFirstInteraction, { once: true, passive: true });
-    window.addEventListener("touchstart", handleFirstInteraction, { once: true, passive: true });
-    window.addEventListener("click", handleFirstInteraction, { once: true, passive: true });
-    window.addEventListener("keydown", handleFirstInteraction, { once: true, passive: true });
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(retryTimer);
-      window.removeEventListener("load", onLoad);
-      document.removeEventListener("visibilitychange", onVisible);
-      cleanupListeners();
-    };
-  }, []);
+    if (audio) {
+      audio.volume = 0.28;
+      audio.currentTime = 0;
+      void audio.play().catch(() => {});
+    }
+    soundOnRef.current = true;
+    setSoundOn(true);
+    setHasStarted(true);
+  };
 
   const toggleSound = () => {
     const audio = audioRef.current;
@@ -213,6 +159,11 @@ function Index() {
   };
 
   const replay = () => {
+    const audio = audioRef.current;
+    if (audio && soundOn) {
+      audio.currentTime = 0;
+      void audio.play().catch(() => {});
+    }
     setScene(0);
   };
 
@@ -245,24 +196,30 @@ function Index() {
       {/* Camada 1: Vinheta suave em direção ao tom escuro base (#080C2A) para contraste periférico */}
       <div className="celestial-vignette" aria-hidden />
 
-      {/* Áudio ambiente com autoplay e reprodução contínua */}
+      {/* Áudio ambiente com reprodução contínua */}
       <audio
         ref={audioRef}
         src="/audio/celestial-ambient.mp3"
-        autoPlay
         loop
         preload="auto"
         playsInline
       />
       <div className="celestial-grain pointer-events-none fixed inset-0 z-10" aria-hidden />
 
-      {/* Estrela cadente com asset flexível */}
-      <ArcShootingStar mouse={mouse} scrollY={scrollY} />
+      {/* Estrela cadente com asset flexível (inicia após o clique de abertura) */}
+      {hasStarted && <ArcShootingStar mouse={mouse} scrollY={scrollY} />}
 
       {/* Camada de Conteúdo com Mouse e Scroll Parallax */}
       <div className="relative z-20 flex min-h-[100svh] items-center justify-center px-6 py-16 sm:px-8 sm:py-24">
         <AnimatePresence mode="wait">
-          {scene === 0 && <GateScene key="gate" mouse={mouse} />}
+          {scene === 0 && (
+            <GateScene
+              key="gate"
+              mouse={mouse}
+              hasStarted={hasStarted}
+              onStart={handleStart}
+            />
+          )}
           {scene === 1 && <SaveTheDateScene key="save" mouse={mouse} scrollY={scrollY} />}
           {scene === 2 && <DateScene key="date" mouse={mouse} scrollY={scrollY} />}
           {scene === 3 && <FinalScene key="final" mouse={mouse} scrollY={scrollY} />}
@@ -270,28 +227,30 @@ function Index() {
       </div>
 
       {/* Barra de navegação inferior com escala e acessibilidade */}
-      <nav
-        aria-label="Progresso do convite"
-        className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-full border border-silver/10 bg-space-black/60 px-4 py-2 backdrop-blur-md"
-      >
-        {[0, 1, 2, 3].map((step) => (
-          <button
-            key={step}
-            type="button"
-            onClick={() => setScene(step)}
-            aria-label={`Ir para cena ${step + 1}`}
-            aria-current={scene === step ? "step" : undefined}
-            className={`h-1 cursor-pointer rounded-full transition-all duration-500 ${
-              scene === step
-                ? "w-8 bg-silver shadow-[0_0_8px_var(--silver)]"
-                : "w-3 bg-silver/30 hover:bg-silver/70"
-            }`}
-          />
-        ))}
-      </nav>
+      {hasStarted && (
+        <nav
+          aria-label="Progresso do convite"
+          className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-full border border-silver/10 bg-space-black/60 px-4 py-2 backdrop-blur-md"
+        >
+          {[0, 1, 2, 3].map((step) => (
+            <button
+              key={step}
+              type="button"
+              onClick={() => setScene(step)}
+              aria-label={`Ir para cena ${step + 1}`}
+              aria-current={scene === step ? "step" : undefined}
+              className={`h-1 cursor-pointer rounded-full transition-all duration-500 ${
+                scene === step
+                  ? "w-8 bg-silver shadow-[0_0_8px_var(--silver)]"
+                  : "w-3 bg-silver/30 hover:bg-silver/70"
+              }`}
+            />
+          ))}
+        </nav>
+      )}
 
       {/* Botões de controle de topo */}
-      {scene < 3 && (
+      {hasStarted && scene < 3 && (
         <Button
           type="button"
           variant="ghost"
@@ -302,7 +261,7 @@ function Index() {
         </Button>
       )}
 
-      {scene === 3 && (
+      {hasStarted && scene === 3 && (
         <Button
           type="button"
           size="icon"
@@ -316,31 +275,21 @@ function Index() {
         </Button>
       )}
 
-      <div className="fixed right-4 top-4 z-40 flex flex-col items-end gap-2 sm:right-8 sm:top-7">
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          onClick={toggleSound}
-          aria-label={soundOn ? "Desativar música" : "Ativar música"}
-          title={soundOn ? "Desativar música" : "Ativar música"}
-          className={
-            autoplayBlocked
-              ? "animate-pulse text-star hover:bg-silver/10"
-              : "text-silver/70 hover:bg-silver/10 hover:text-star"
-          }
-        >
-          {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
-        </Button>
-        {autoplayBlocked && (
-          <span
-            className="pointer-events-none rounded-full border border-silver/20 bg-[#0a0b1e]/70 px-3 py-1 text-[10px] tracking-widest text-silver/80 backdrop-blur-sm"
-            role="status"
+      {hasStarted && (
+        <div className="fixed right-4 top-4 z-40 flex flex-col items-end gap-2 sm:right-8 sm:top-7">
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            onClick={toggleSound}
+            aria-label={soundOn ? "Desativar música" : "Ativar música"}
+            title={soundOn ? "Desativar música" : "Ativar música"}
+            className="text-silver/70 hover:bg-silver/10 hover:text-star"
           >
-            TOQUE PARA ATIVAR A MÚSICA
-          </span>
-        )}
-      </div>
+            {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
+          </Button>
+        </div>
+      )}
     </main>
   );
 }
@@ -378,7 +327,15 @@ function ArcShootingStar({
 /**
  * Cena 0: Portões Celestiais abrindo
  */
-function GateScene({ mouse }: { mouse: { x: number; y: number } }) {
+function GateScene({
+  mouse,
+  hasStarted,
+  onStart,
+}: {
+  mouse: { x: number; y: number };
+  hasStarted: boolean;
+  onStart: () => void;
+}) {
   return (
     <motion.section
       aria-label="Abertura do convite"
@@ -397,41 +354,83 @@ function GateScene({ mouse }: { mouse: { x: number; y: number } }) {
         aria-hidden
       />
 
+      {/* Portão Esquerdo */}
       <motion.div
-        className="gate-panel absolute inset-y-0 left-0 w-1/2 origin-left border-r"
+        className="gate-panel absolute inset-y-0 left-0 w-1/2 origin-left border-r z-20"
         initial={{ x: 0, rotateY: 0 }}
-        animate={{ x: "-98%", rotateY: 18 }}
-        transition={{ duration: 4.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
-      />
-      <motion.div
-        className="gate-panel absolute inset-y-0 right-0 w-1/2 origin-right border-l"
-        initial={{ x: 0, rotateY: 0 }}
-        animate={{ x: "98%", rotateY: -18 }}
-        transition={{ duration: 4.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
+        animate={hasStarted ? { x: "-98%", rotateY: 18 } : { x: 0, rotateY: 0 }}
+        transition={{ duration: 4.0, ease: [0.65, 0, 0.35, 1] }}
       />
 
+      {/* Portão Direito */}
       <motion.div
-        className="z-10 flex flex-col items-center text-center"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{
-          opacity: [0, 1, 1, 0],
-          scale: [0.9, 1, 1, 1.05],
-          y: [-4, 4, -4],
-        }}
-        transition={{
-          opacity: { duration: 4.5, times: [0, 0.25, 0.75, 1] },
-          scale: { duration: 4.5, times: [0, 0.25, 0.75, 1] },
-          y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
-        }}
-        style={{
-          transform: `translate3d(${mouse.x * 20}px, ${mouse.y * 16}px, 0)`,
-        }}
-      >
-        <FourPointSparkle size={22} className="mb-4 text-silver" delay={0.2} />
-        <p className="font-label text-[0.65rem] uppercase tracking-[0.45em] text-silver/90 sm:text-xs">
-          Uma noite especial se aproxima
-        </p>
-      </motion.div>
+        className="gate-panel absolute inset-y-0 right-0 w-1/2 origin-right border-l z-20"
+        initial={{ x: 0, rotateY: 0 }}
+        animate={hasStarted ? { x: "98%", rotateY: -18 } : { x: 0, rotateY: 0 }}
+        transition={{ duration: 4.0, ease: [0.65, 0, 0.35, 1] }}
+      />
+
+      {/* Botão de Início (antes do clique) ou Mensagem de Revelação (após o clique) */}
+      <AnimatePresence mode="wait">
+        {!hasStarted ? (
+          <motion.div
+            key="start-btn"
+            className="z-30 flex flex-col items-center text-center px-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{
+              opacity: 0,
+              scale: 0.9,
+              filter: "blur(6px)",
+              transition: { duration: 0.5 },
+            }}
+            style={{
+              transform: `translate3d(${mouse.x * 12}px, ${mouse.y * 12}px, 0)`,
+            }}
+          >
+            <FourPointSparkle
+              size={26}
+              className="mb-5 text-silver drop-shadow-[0_0_12px_rgba(255,255,255,0.85)] animate-pulse"
+            />
+            <Button
+              type="button"
+              variant="celestial"
+              size="celestial"
+              onClick={onStart}
+              className="group relative cursor-pointer overflow-hidden rounded-full border border-silver/50 bg-[#070b24]/85 px-8 py-5 text-xs sm:text-sm font-label font-semibold uppercase tracking-[0.28em] text-star shadow-[0_0_32px_rgba(235,238,255,0.35)] backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-silver hover:bg-[#0c123d]/90 hover:shadow-[0_0_48px_rgba(255,255,255,0.6)] active:scale-95"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                CLIQUE PARA COMEÇAR
+              </span>
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+            </Button>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="gate-revealed-text"
+            className="z-10 flex flex-col items-center text-center px-4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{
+              opacity: [0, 1, 1, 0],
+              scale: [0.9, 1, 1, 1.05],
+              y: [-4, 4, -4],
+            }}
+            transition={{
+              opacity: { duration: 4.5, times: [0, 0.25, 0.75, 1], delay: 0.3 },
+              scale: { duration: 4.5, times: [0, 0.25, 0.75, 1], delay: 0.3 },
+              y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
+            }}
+            style={{
+              transform: `translate3d(${mouse.x * 20}px, ${mouse.y * 16}px, 0)`,
+            }}
+          >
+            <FourPointSparkle size={22} className="mb-4 text-silver" delay={0.2} />
+            <p className="font-label text-[0.65rem] uppercase tracking-[0.45em] text-silver/90 sm:text-xs">
+              Uma noite especial se aproxima
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.section>
   );
 }
