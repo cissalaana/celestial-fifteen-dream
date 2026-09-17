@@ -465,8 +465,13 @@ function UnifiedInvitationScene({
         </span>
       </motion.div>
 
-      {/* 4. Ilustração da Personagem (max-w-[220px] centralizada) com fundo limpo e transparente */}
+      {/* 4. Ilustração da Personagem (max-w-[220px] centralizada) com névoa luminosa etérea e difusa */}
       <div className="relative flex w-full flex-col items-center justify-center my-1 sm:my-2">
+        {/* Iluminação central etérea: névoa luminosa azul suave sem bordas rígidas */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[min(85vw,26rem)] rounded-full bg-blue-500/20 blur-[100px] opacity-20"
+          aria-hidden
+        />
 
         {/* Brilhos twinkle sutis ao redor da boneca */}
         <SparkleCluster
