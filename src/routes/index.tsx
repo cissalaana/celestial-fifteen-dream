@@ -111,6 +111,7 @@ function useScrollParallax() {
 function Index() {
   const [scene, setScene] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const soundOnRef = useRef(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const mouse = useMouseParallax();
@@ -138,7 +139,7 @@ function Index() {
     let cancelled = false;
 
     const tryPlay = () => {
-      if (cancelled) return;
+      if (cancelled || !soundOnRef.current) return;
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise
