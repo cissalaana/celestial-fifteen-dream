@@ -180,7 +180,6 @@ function Index() {
       window.removeEventListener("touchstart", handleFirstInteraction);
       window.removeEventListener("click", handleFirstInteraction);
       window.removeEventListener("keydown", handleFirstInteraction);
-ecuting
     };
 
     window.addEventListener("pointerdown", handleFirstInteraction, { once: true, passive: true });
