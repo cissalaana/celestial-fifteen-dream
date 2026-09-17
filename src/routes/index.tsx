@@ -34,7 +34,7 @@ const WHATSAPP_LINK =
   "https://wa.me/5581988079987?text=Pode%20contar%20com%20a%20minha%20presen%C3%A7a!%20Te%20vejo%20l%C3%A1";
 
 // Imagem transparente da boneca (sem fundo, totalmente vazada)
-const CHARACTER_IMAGE_SRC = "/assets/A noite de uma estrela (3).png";
+const CHARACTER_IMAGE_SRC = "/assets/A noite de uma estrela (1).png";
 const FALLBACK_CHARACTER_SRC = "/assets/personagem.png";
 
 /**
@@ -777,11 +777,14 @@ function FloatingCharacter({ mouse }: { mouse: { x: number; y: number } }) {
 
   return (
     <div
-      className="relative z-10 mt-14 flex w-full flex-col items-center justify-end overflow-hidden sm:mt-20 md:mt-24"
+      className="relative z-10 mt-14 flex w-full flex-col items-center justify-end sm:mt-20 md:mt-24"
       style={{
         transform: `translate3d(${mouse.x * 24}px, ${mouse.y * 14}px, 0)`,
       }}
     >
+      {/* Névoa de Luz Traseira (Glow Halo): mancha translúcida e etérea sem borda visível */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full bg-blue-500 opacity-20 blur-[90px] pointer-events-none" />
+
       {/* Brilhos em formato de cruz de 4 pontas com pulsação sutil (twinkle) ao redor da personagem */}
       <SparkleCluster
         sparkles={[
