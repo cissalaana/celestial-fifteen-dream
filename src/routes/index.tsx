@@ -110,15 +110,10 @@ function useScrollParallax() {
 
 function Index() {
   const [scene, setScene] = useState(0);
-  const [soundOn, setSoundOn] = useState(true);
-  const soundOnRef = useRef(true);
+  const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const mouse = useMouseParallax();
   const scrollY = useScrollParallax();
-
-  useEffect(() => {
-    soundOnRef.current = soundOn;
-  }, [soundOn]);
 
   useEffect(() => {
     if (scene >= 3) return;
@@ -133,59 +128,46 @@ function Index() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.volume = 0.28;
+    audio.loop = true;
+    audio.volume = 0.5; // volume suave em 50%
 
-    // Tentativa inicial imediata de autoplay
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          setSoundOn(true);
-        })
-        .catch(() => {
-          // Se o navegador bloquear o autoplay restrito antes de interação,
-          // mantemos soundOn = true (ícone desmutado/ligado) e iniciamos na primeira ação.
-        });
-    }
-
-    const handleFirstInteraction = () => {
-      if (soundOnRef.current && audio.paused) {
-        audio.volume = 0.28;
-        void audio.play().catch(() => {});
+    const startAudio = () => {
+      if (!isMuted) {
+        audio.play().catch(() => {});
       }
-      cleanupListeners();
+      // Remova os ouvintes após a primeira interação desbloquear o áudio
+      window.removeEventListener("click", startAudio);
+      window.removeEventListener("touchstart", startAudio);
+      window.removeEventListener("scroll", startAudio);
     };
 
-    const cleanupListeners = () => {
-      window.removeEventListener("pointerdown", handleFirstInteraction);
-      window.removeEventListener("touchstart", handleFirstInteraction);
-      window.removeEventListener("click", handleFirstInteraction);
-      window.removeEventListener("keydown", handleFirstInteraction);
-    };
-
-    window.addEventListener("pointerdown", handleFirstInteraction, { once: true, passive: true });
-    window.addEventListener("touchstart", handleFirstInteraction, { once: true, passive: true });
-    window.addEventListener("click", handleFirstInteraction, { once: true, passive: true });
-    window.addEventListener("keydown", handleFirstInteraction, { once: true, passive: true });
+    // Tenta tocar imediatamente
+    audio.play().catch(() => {
+      // Se o navegador bloquear, escuta a primeira interação do usuário
+      window.addEventListener("click", startAudio);
+      window.addEventListener("touchstart", startAudio);
+      window.addEventListener("scroll", startAudio);
+    });
 
     return () => {
-      cleanupListeners();
+      window.removeEventListener("click", startAudio);
+      window.removeEventListener("touchstart", startAudio);
+      window.removeEventListener("scroll", startAudio);
     };
-  }, []);
+  }, [isMuted]);
 
   const toggleSound = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (soundOn) {
+
+    if (!isMuted) {
       audio.pause();
-      soundOnRef.current = false;
-      setSoundOn(false);
-      return;
+      setIsMuted(true);
+    } else {
+      audio.volume = 0.5;
+      audio.play().catch(() => {});
+      setIsMuted(false);
     }
-    audio.volume = 0.28;
-    void audio.play().catch(() => {});
-    soundOnRef.current = true;
-    setSoundOn(true);
   };
 
   const replay = () => {
@@ -297,11 +279,11 @@ function Index() {
         size="icon"
         variant="ghost"
         onClick={toggleSound}
-        aria-label={soundOn ? "Desativar música" : "Ativar música"}
-        title={soundOn ? "Desativar música" : "Ativar música"}
+        aria-label={isMuted ? "Ativar música" : "Desativar música"}
+        title={isMuted ? "Ativar música" : "Desativar música"}
         className="fixed right-4 top-4 z-40 text-silver/70 hover:bg-silver/10 hover:text-star sm:right-8 sm:top-7"
       >
-        {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
+        {isMuted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
       </Button>
     </main>
   );
