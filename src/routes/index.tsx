@@ -135,23 +135,42 @@ function Index() {
 
     audio.volume = 0.28;
 
-    // Tentativa inicial imediata de autoplay
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          setSoundOn(true);
-        })
-        .catch(() => {
-          // Se o navegador bloquear o autoplay restrito antes de interação,
-          // mantemos soundOn = true (ícone desmutado/ligado) e iniciamos na primeira ação.
-        });
-    }
+    let cancelled = false;
+
+    const tryPlay = () => {
+      if (cancelled) return;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setAutoplayBlocked(false);
+            // Para de tentar assim que a música começa de verdade.
+            window.clearInterval(retryTimer);
+            window.removeEventListener("pointerdown", handleFirstInteraction);
+          })
+          .catch(() => {
+            // Autoplay com som bloqueado pelo navegador: mostramos o lembrete
+            // e tentamos novamente em intervalos e na primeira interação.
+            setAutoplayBlocked(true);
+          });
+      }
+    };
+
+    // Tentativa imediata + novas tentativas automáticas: alguns navegadores
+    // liberam a reprodução após o carregamento ou ao voltar para a aba.
+    tryPlay();
+    const retryTimer = window.setInterval(tryPlay, 2500);
+    const onLoad = () => tryPlay();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") tryPlay();
+    };
+    window.addEventListener("load", onLoad);
+    document.addEventListener("visibilitychange", onVisible);
 
     const handleFirstInteraction = () => {
       if (soundOnRef.current && audio.paused) {
         audio.volume = 0.28;
-        void audio.play().catch(() => {});
+        tryPlay();
       }
       cleanupListeners();
     };
@@ -161,6 +180,7 @@ function Index() {
       window.removeEventListener("touchstart", handleFirstInteraction);
       window.removeEventListener("click", handleFirstInteraction);
       window.removeEventListener("keydown", handleFirstInteraction);
+ecuting
     };
 
     window.addEventListener("pointerdown", handleFirstInteraction, { once: true, passive: true });
@@ -169,6 +189,10 @@ function Index() {
     window.addEventListener("keydown", handleFirstInteraction, { once: true, passive: true });
 
     return () => {
+      cancelled = true;
+      window.clearInterval(retryTimer);
+      window.removeEventListener("load", onLoad);
+      document.removeEventListener("visibilitychange", onVisible);
       cleanupListeners();
     };
   }, []);
